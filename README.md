@@ -15,4 +15,4 @@ hg clone ssh://hg@bitbucket.org/Guillochon/tdefit
 make -j tdefit
 ```
 
-Code requires two files sets of data not included in this repository: A directory of event data and a directory of dm/dt data. Both are available from astrocrash.net.
+Code requires two sets of data as inputs that are not included in this repository: A directory of event data and a directory of dm/dt data. Both are available from astrocrash.net (details forthcoming).

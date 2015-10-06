@@ -6,7 +6,7 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
@@ -87,12 +87,12 @@ module tdefit_interface
         end subroutine
 
         function filterfunc(nu) result(frac)
-            real, INTENT(IN) :: nu
+            real, intent(in) :: nu
             real :: frac
         end function
 
         function filterintfunc(nu) result(frac)
-            real, INTENT(IN) :: nu
+            real, intent(in) :: nu
             real :: frac
         end function
 
@@ -274,9 +274,9 @@ module tdefit_interface
 
         recursive subroutine trapezoid(func,minx,maxx,div,val)
             real, external    :: func
-            real, intent(IN)  :: minx, maxx
-            integer, intent(IN)           :: div
-            real, intent(OUT) :: val
+            real, intent(in)  :: minx, maxx
+            integer, intent(in)           :: div
+            real, intent(out) :: val
         end subroutine
 
         real function logic2dbl(a)

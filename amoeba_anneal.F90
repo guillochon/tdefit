@@ -6,37 +6,37 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
 !You should have received a copy of the GNU General Public License
 !along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBROUTINE amoeba_anneal(p,y,pb,yb,ftol,func,iter,temptr)
+subroutine amoeba_anneal(p,y,pb,yb,ftol,func,iter,temptr)
     USE tdefit_util, ONLY : assert_eq,swap,swap_rv
-    integer, INTENT(INOUT) :: iter
-    real, INTENT(INOUT) :: yb
-    real, INTENT(IN) :: ftol,temptr
-    real, DIMENSION(:), INTENT(INOUT) :: y,pb
-    real, DIMENSION(:,:), INTENT(INOUT) :: p
-    INTERFACE
-        FUNCTION func(x)
-        real, DIMENSION(:), INTENT(IN) :: x
+    integer, intent(inout) :: iter
+    real, intent(inout) :: yb
+    real, intent(in) :: ftol,temptr
+    real, dimension(:), intent(inout) :: y,pb
+    real, dimension(:,:), intent(inout) :: p
+    interface
+        function func(x)
+        real, dimension(:), intent(in) :: x
         real :: func
-        END FUNCTION func
-    END INTERFACE
-    integer, PARAMETER :: NMAX=200
+        end function func
+    end interface
+    integer, parameter :: NMAX=200
     integer :: ihi,ndim
     real :: yhi
-    real, DIMENSION(size(p,2)) :: psum
+    real, dimension(size(p,2)) :: psum
     call amoeba
     CONTAINS
 
-    SUBROUTINE amoeba
+    subroutine amoeba
     integer :: i,ilo,inhi
     real :: rtol,ylo,ynhi,ysave,ytry
-    real, DIMENSION(size(y)) :: yt,harvest
+    real, dimension(size(y)) :: yt,harvest
     ndim=assert_eq(size(p,2),size(p,1)-1,size(y)-1,size(pb),'amoeba_anneal')
     psum(:)=sum(p(:,:),dim=1)
     do
@@ -74,13 +74,13 @@ SUBROUTINE amoeba_anneal(p,y,pb,yb,ftol,func,iter,temptr)
             end if
         end if
     end do
-    END SUBROUTINE amoeba
+    end subroutine amoeba
 
-    FUNCTION amoeba_move(fac)
-    real, INTENT(IN) :: fac
+    function amoeba_move(fac)
+    real, intent(in) :: fac
     real :: amoeba_move
     real :: fac1,fac2,yflu,ytry,harv
-    real, DIMENSION(size(p,2)) :: ptry
+    real, dimension(size(p,2)) :: ptry
     fac1=(1.0-fac)/ndim
     fac2=fac1-fac
     ptry(:)=psum(:)*fac1-p(ihi,:)*fac2
@@ -98,5 +98,5 @@ SUBROUTINE amoeba_anneal(p,y,pb,yb,ftol,func,iter,temptr)
         p(ihi,:)=ptry(:)
     end if
     amoeba_move=yflu
-    END FUNCTION amoeba_move
-END SUBROUTINE amoeba_anneal
+    end function amoeba_move
+end subroutine amoeba_anneal

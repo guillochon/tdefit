@@ -6,22 +6,22 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
 !You should have received a copy of the GNU General Public License
 !along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBROUTINE least_sq(x,y,a,b,siga,sigb,chi2,q,sig)
+subroutine least_sq(x,y,a,b,siga,sigb,chi2,q,sig)
     USE tdefit_util, ONLY : gamma_inc, assert_eq
-    real, DIMENSION(:), INTENT(IN) :: x,y
-    real, INTENT(OUT) :: a,b,siga,sigb,chi2,q
-    real, DIMENSION(:), OPTIONAL, INTENT(IN) :: sig
+    real, dimension(:), intent(in) :: x,y
+    real, intent(out) :: a,b,siga,sigb,chi2,q
+    real, dimension(:), optional, intent(in) :: sig
     integer :: ndata
     real :: sigdat,ss,sx,sxoss,sy,st2
-    real, DIMENSION(size(x)), TARGET :: t
-    real, DIMENSION(:), POINTER :: wt
+    real, dimension(size(x)), TARGET :: t
+    real, dimension(:), POINTER :: wt
     if (present(sig)) then
         ndata=assert_eq(size(x),size(y),size(sig),'least squares')
         wt=>t
@@ -60,4 +60,4 @@ SUBROUTINE least_sq(x,y,a,b,siga,sigb,chi2,q,sig)
         siga=siga*sigdat
         sigb=sigb*sigdat
     end if
-END SUBROUTINE least_sq
+end subroutine least_sq

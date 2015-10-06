@@ -1,6 +1,6 @@
 ! qxgs, public domain
 
-MODULE adapt_quad
+module adapt_quad
 ! Module for adaptive quadrature.
 ! Adapted from TOMS algorithm 691.
 ! This version uses the ELF90 subset of Fortran 90.
@@ -9,16 +9,16 @@ MODULE adapt_quad
 
 CONTAINS
 
-RECURSIVE SUBROUTINE qpsrt(limit, last, maxerr, ermax, elist, iord, nrmax)
+RECURSIVE subroutine qpsrt(limit, last, maxerr, ermax, elist, iord, nrmax)
 !     ..................................................................
 
 ! 1.   QPSRT
-!      ORDERING ROUTINE
-!         STANDARD FORTRAN SUBROUTINE
-!         REAL VERSION
+!      ORDERING R(out)INE
+!         STANDARD FORTRAN subroutine
+!         real VERSION
 
 ! 2.   PURPOSE
-!         THIS ROUTINE MAINTAINS THE DESCENDING ORDERING IN THE LIST OF THE
+!         THIS R(out)INE MAINTAINS THE DESCENDING ORDERING IN THE LIST OF THE
 !         LOCAL ERROR ESTIMATES RESULTING FROM THE INTERVAL SUBDIVISION
 !         PROCESS.  AT EACH CALL TWO ERROR ESTIMATES ARE INSERTED USING THE
 !         SEQUENTIAL SEARCH METHOD, TOP-DOWN FOR THE LARGEST ERROR ESTIMATE
@@ -27,49 +27,49 @@ RECURSIVE SUBROUTINE qpsrt(limit, last, maxerr, ermax, elist, iord, nrmax)
 ! 3.   CALLING SEQUENCE
 !         CALL QPSRT(LIMIT, LAST, MAXERR, ERMAX, ELIST, IORD, NRMAX)
 
-!      PARAMETERS (MEANING AT OUTPUT)
-!         LIMIT  - INTEGER
+!      parameterS (MEANING AT (out)PUT)
+!         LIMIT  - integer
 !                  MAXIMUM NUMBER OF ERROR ESTIMATES THE LIST CAN CONTAIN
 
-!         LAST   - INTEGER
+!         LAST   - integer
 !                  NUMBER OF ERROR ESTIMATES CURRENTLY IN THE LIST
 
-!         MAXERR - INTEGER
+!         MAXERR - integer
 !                  MAXERR POINTS TO THE NRMAX-TH LARGEST ERROR ESTIMATE
 !                  CURRENTLY IN THE LIST
 
-!         ERMAX  - REAL
+!         ERMAX  - real
 !                  NRMAX-TH LARGEST ERROR ESTIMATE
 !                  ERMAX = ELIST(MAXERR)
 
-!         ELIST  - REAL
-!                  VECTOR OF DIMENSION LAST CONTAINING THE ERROR ESTIMATES
+!         ELIST  - real
+!                  VECTOR OF dimension LAST CONTAINING THE ERROR ESTIMATES
 
-!         IORD   - INTEGER
-!                  VECTOR OF DIMENSION LAST, THE FIRST K ELEMENTS OF
+!         IORD   - integer
+!                  VECTOR OF dimension LAST, THE FIRST K ELEMENTS OF
 !                  WHICH CONTAIN POINTERS TO THE ERROR ESTIMATES,
 !                  SUCH THAT ELIST(IORD(1)), ... , ELIST(IORD(K))
 !                  FORM A DECREASING SEQUENCE, WITH K = LAST IF
 !                  LAST <= (LIMIT/2+2), AND K = LIMIT+1-LAST OTHERWISE
 
-!         NRMAX  - INTEGER
+!         NRMAX  - integer
 !                  MAXERR = IORD(NRMAX)
 
-! 4.   NO SUBROUTINES OR FUNCTIONS NEEDED
+! 4.   NO subroutineS OR functionS NEEDED
 
 !     ..................................................................
 
 USE constants_NSWC
 
-INTEGER, INTENT(IN)                 :: limit, last
-real, DIMENSION(:), INTENT(IN) :: elist
-INTEGER, INTENT(IN OUT)             :: nrmax
-INTEGER, DIMENSION(:), INTENT(OUT)  :: iord
-INTEGER, INTENT(OUT)                :: maxerr
-real, INTENT(OUT)              :: ermax
+integer, intent(in)                 :: limit, last
+real, dimension(:), intent(in) :: elist
+integer, intent(inout)             :: nrmax
+integer, dimension(:), intent(out)  :: iord
+integer, intent(out)                :: maxerr
+real, intent(out)              :: ermax
 
 real :: errmax, errmin
-INTEGER   :: i, ibeg, ido, isucc, j, jbnd, jupbn, k
+integer   :: i, ibeg, ido, isucc, j, jbnd, jupbn, k
 
 !           CHECK WHETHER THE LIST CONTAINS MORE THAN TWO ERROR ESTIMATES.
 
@@ -79,9 +79,9 @@ iord(1) = 1
 iord(2) = 2
 GO TO 90
 
-!           THIS PART OF THE ROUTINE IS ONLY EXECUTED IF,
+!           THIS PART OF THE R(out)INE IS ONLY EXECUTED IF,
 !           DUE TO A DIFFICULT INTEGRAND, SUBDIVISION INCREASED
-!           THE ERROR ESTIMATE.   IN THE NORMAL CASE THE INSERT PROCEDURE
+!           THE ERROR ESTIMATE.   IN THE NORMAL CASE THE INSERT procedure
 !           SHOULD START AFTER THE NRMAX-TH LARGEST ERROR ESTIMATE.
 
 10 errmax = elist(maxerr)
@@ -89,11 +89,11 @@ IF(nrmax == 1) GO TO 30
 ido = nrmax-1
 DO i = 1, ido
   isucc = iord(nrmax-1)
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   IF(errmax <= elist(isucc)) EXIT
   iord(nrmax) = isucc
   nrmax = nrmax-1
-END DO
+end DO
 
 !           COMPUTE THE NUMBER OF ELEMENTS IN THE LIST TO BE MAINTAINED
 !           IN DESCENDING ORDER.  THIS NUMBER DEPENDS ON THE NUMBER OF
@@ -110,10 +110,10 @@ jbnd = jupbn-1
 ibeg = nrmax+1
 DO i=ibeg, jbnd
   isucc = iord(i)
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   IF(errmax >= elist(isucc)) GO TO 60
   iord(i-1) = isucc
-END DO
+end DO
 iord(jbnd) = maxerr
 iord(jupbn) = last
 GO TO 90
@@ -124,11 +124,11 @@ GO TO 90
 k = jbnd
 DO j=i, jbnd
   isucc = iord(k)
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   IF(errmin < elist(isucc)) GO TO 80
   iord(k+1) = isucc
   k = k-1
-END DO
+end DO
 iord(i) = last
 GO TO 90
 80 iord(k+1) = last
@@ -138,60 +138,60 @@ GO TO 90
 90 maxerr = iord(nrmax)
 ermax = elist(maxerr)
 RETURN
-END SUBROUTINE qpsrt
+end subroutine qpsrt
 
 
-RECURSIVE SUBROUTINE qelg (n, epstab, result, abserr, res3la, nres, epmach, oflow)
+RECURSIVE subroutine qelg (n, epstab, result, abserr, res3la, nres, epmach, oflow)
 !-----------------------------------------------------------------------
 
 ! 1.   PURPOSE
-!         THE ROUTINE DETERMINES THE LIMIT OF A GIVEN SEQUENCE OF
+!         THE R(out)INE DETERMINES THE LIMIT OF A GIVEN SEQUENCE OF
 !         APPROXIMATIONS, BY MEANS OF THE EPSILON ALGORITHM OF P. WYNN.
 !         AN ESTIMATE OF THE ABSOLUTE ERROR IS ALSO GIVEN.
 !         THE CONDENSED EPSILON TABLE IS COMPUTED. ONLY THOSE ELEMENTS
 !         NEEDED FOR THE COMPUTATION OF THE NEXT DIAGONAL ARE PRESERVED.
 
-! 2.   PARAMETERS
-!         N      - INTEGER
+! 2.   parameterS
+!         N      - integer
 !                  EPSTAB(N) CONTAINS THE NEW ELEMENT IN THE
 !                  FIRST COLUMN OF THE EPSILON TABLE.
 
-!         EPSTAB - REAL
-!                  VECTOR OF DIMENSION 52 CONTAINING THE ELEMENTS OF THE
+!         EPSTAB - real
+!                  VECTOR OF dimension 52 CONTAINING THE ELEMENTS OF THE
 !                  TWO LOWER DIAGONALS OF THE TRIANGULAR EPSILON TABLE.
 !                  THE ELEMENTS ARE NUMBERED STARTING AT THE RIGHT-HAND
 !                  CORNER OF THE TRIANGLE.
 
-!         RESULT - REAL
+!         RESULT - real
 !                  RESULTING APPROXIMATION TO THE INTEGRAL
 
-!         ABSERR - REAL
+!         ABSERR - real
 !                  ESTIMATE OF THE ABSOLUTE ERROR COMPUTED FROM
 !                  RESULT AND THE 3 PREVIOUS RESULTS
 
-!         RES3LA - REAL
-!                  VECTOR OF DIMENSION 3 CONTAINING THE LAST 3 RESULTS
+!         RES3LA - real
+!                  VECTOR OF dimension 3 CONTAINING THE LAST 3 RESULTS
 
-!         NRES   - INTEGER
-!                  NUMBER OF CALLS TO THE ROUTINE
+!         NRES   - integer
+!                  NUMBER OF CALLS TO THE R(out)INE
 !                  (SHOULD BE ZERO AT FIRST CALL)
 
-!         EPMACH - REAL
+!         EPMACH - real
 !                  THE RELATIVE PRECISION OF THE FLOATING ARITHMETIC
 !                  BEING USED.
 
-!         OFLOW  - REAL
+!         OFLOW  - real
 !                  THE LARGEST POSITIVE MAGNITUDE.
 
-! 3.   NO SUBROUTINES OR FUNCTIONS USED
+! 3.   NO subroutineS OR functionS USED
 
 !-----------------------------------------------------------------------
 USE constants_NSWC
 
-INTEGER, INTENT(IN OUT)                 :: n, nres
-real, INTENT(IN)                   :: epmach, oflow
-real, INTENT(OUT)                  :: abserr, result
-real, DIMENSION(:), INTENT(IN OUT) :: epstab, res3la
+integer, intent(inout)                 :: n, nres
+real, intent(in)                   :: epmach, oflow
+real, intent(out)                  :: abserr, result
+real, dimension(:), intent(inout) :: epstab, res3la
 !---------------------
 
 !      LIST OF MAJOR VARIABLES
@@ -213,7 +213,7 @@ real, DIMENSION(:), INTENT(IN OUT) :: epstab, res3la
 
 real :: delta1, delta2, delta3, epsinf, error, err1, err2, err3, e0, &
              e1, e1abs, e2, e3, res, ss, tol1, tol2, tol3
-INTEGER   :: i, ib, ib2, ie, indx, k1, k2, k3, limexp, newelm, num
+integer   :: i, ib, ib2, ie, indx, k1, k2, k3, limexp, newelm, num
 
 nres = nres + 1
 abserr = oflow
@@ -248,7 +248,7 @@ DO i = 1, newelm
   
   result = res
   abserr = err2 + err3
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   GO TO 100
   10 e3 = epstab(k1)
   epstab(k1) = e1
@@ -268,7 +268,7 @@ DO i = 1, newelm
   
   IF (epsinf > 0.1D-03) GO TO 30
   20 n = i + i - 1
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   GO TO 50
   
 !      COMPUTE A NEW ELEMENT AND EVENTUALLY ADJUST THE VALUE OF RESULT.
@@ -280,7 +280,7 @@ DO i = 1, newelm
   IF (error > abserr) CYCLE
   abserr = error
   result = res
-END DO
+end DO
 
 !      SHIFT THE TABLE.
 
@@ -292,13 +292,13 @@ DO i = 1, ie
   ib2 = ib + 2
   epstab(ib) = epstab(ib2)
   ib = ib2
-END DO
+end DO
 IF (num == n) GO TO 80
 indx = num - n + 1
 DO i = 1, n
   epstab(i) = epstab(indx)
   indx = indx + 1
-END DO
+end DO
 80 IF (nres >= 4) GO TO 90
 res3la(nres) = result
 abserr = oflow
@@ -313,48 +313,48 @@ res3la(2) = res3la(3)
 res3la(3) = result
 100 abserr = MAX(abserr, 5.0D0*epmach*ABS(result))
 RETURN
-END SUBROUTINE qelg
+end subroutine qelg
 
 
-RECURSIVE SUBROUTINE qxgs (f, a, b, epsabs, epsrel, result, abserr, ier, limit, last)
+RECURSIVE subroutine qxgs (f, a, b, epsabs, epsrel, result, abserr, ier, limit, last)
 
-!     THE ROUTINE CALCULATES AN APPROXIMATION RESULT TO A GIVEN
+!     THE R(out)INE CALCULATES AN APPROXIMATION RESULT TO A GIVEN
 !     DEFINITE INTEGRAL  I = INTEGRAL OF F OVER (A,B),
 !     HOPEFULLY SATISFYING FOLLOWING CLAIM FOR ACCURACY
 !     ABS(I-RESULT) <= MAX(EPSABS, EPSREL*ABS(I)).
 
-! PARAMETERS
+! parameterS
 !  ON ENTRY
-!     F      - REAL
-!              FUNCTION SUBPROGRAM DEFINING THE INTEGRAND
-!              FUNCTION F(X). THE ACTUAL NAME FOR F NEEDS TO BE
+!     F      - real
+!              function SUBPROGRAM DEFINING THE INTEGRAND
+!              function F(X). THE ACTUAL NAME FOR F NEEDS TO BE
 !              DECLARED E X T E R N A L IN THE DRIVER PROGRAM.
 
-!     A      - REAL
+!     A      - real
 !              LOWER LIMIT OF INTEGRATION
 
-!     B      - REAL
+!     B      - real
 !              UPPER LIMIT OF INTEGRATION
 
-!     EPSABS - REAL
+!     EPSABS - real
 !              ABSOLUTE ACCURACY REQUESTED
 
-!     EPSREL - REAL
+!     EPSREL - real
 !              RELATIVE ACCURACY REQUESTED
 
 !  ON RETURN
-!     RESULT - REAL
+!     RESULT - real
 !              APPROXIMATION TO THE INTEGRAL
 
-!     ABSERR - REAL
+!     ABSERR - real
 !              ESTIMATE OF THE MODULUS OF THE ABSOLUTE ERROR,
 !              WHICH SHOULD EQUAL OR EXCEED ABS(I-RESULT)
 
-!     IER    - INTEGER
-!              IER = 0 NORMAL AND RELIABLE TERMINATION OF THE ROUTINE.
+!     IER    - integer
+!              IER = 0 NORMAL AND RELIABLE TERMINATION OF THE R(out)INE.
 !                      IT IS ASSUMED THAT THE REQUESTED ACCURACY HAS
 !                      BEEN ACHIEVED.
-!              IER > 0 ABNORMAL TERMINATION OF THE ROUTINE
+!              IER > 0 ABNORMAL TERMINATION OF THE R(out)INE
 !                      THE ESTIMATES FOR INTEGRAL AND ERROR ARE
 !                      LESS RELIABLE. IT IS ASSUMED THAT THE
 !                      REQUESTED ACCURACY HAS NOT BEEN ACHIEVED.
@@ -362,7 +362,7 @@ RECURSIVE SUBROUTINE qxgs (f, a, b, epsabs, epsrel, result, abserr, ier, limit, 
 !              IER = 1 MAXIMUM NUMBER OF SUBDIVISIONS ALLOWED HAS BEEN
 !                      ACHIEVED.  ONE CAN ALLOW MORE SUB-DIVISIONS BY
 !                      INCREASING THE VALUE OF LIMIT (AND TAKING THE ACCORDING
-!                      DIMENSION ADJUSTMENTS INTO ACCOUNT.  HOWEVER, IF THIS
+!                      dimension ADJUSTMENTS INTO ACCOUNT.  HOWEVER, IF THIS
 !                      YIELDS NO IMPROVEMENT IT IS ADVISED TO ANALYZE THE
 !                      INTEGRAND IN ORDER TO DETERMINE THE INTEGRATION
 !                      DIFFICULTIES.  IF THE POSITION OF A LOCAL DIFFICULTY
@@ -394,23 +394,23 @@ RECURSIVE SUBROUTINE qxgs (f, a, b, epsabs, epsrel, result, abserr, ier, limit, 
 !                      WORK(LIMIT*2+1) AND WORK(LIMIT*3+1) ARE SET TO ZERO,
 !                      WORK(1) IS SET TO A, AND WORK(LIMIT+1) TO B.
 
-!  DIMENSIONING PARAMETERS
-!     LIMIT - INTEGER
+!  dimensionING parameterS
+!     LIMIT - integer
 !             LIMIT DETERMINES THE MAXIMUM NUMBER OF SUBINTERVALS IN THE
 !             PARTITION OF THE GIVEN INTEGRATION INTERVAL (A,B), LIMIT >= 1.
-!             IF LIMIT < 1, THE ROUTINE WILL END WITH IER = 6.
+!             IF LIMIT < 1, THE R(out)INE WILL end WITH IER = 6.
 
-!     LAST  - INTEGER
+!     LAST  - integer
 !             ON RETURN, LAST EQUALS THE NUMBER OF SUBINTERVALS PRODUCED
 !             IN THE SUBDIVISION PROCESS, WHICH DETERMINES THE NUMBER OF
 !             SIGNIFICANT ELEMENTS ACTUALLY IN THE WORK ARRAYS.
 
 USE constants_NSWC
 
-real, INTENT(IN)  :: a, b, epsabs, epsrel
-real, INTENT(OUT) :: result, abserr
-INTEGER, INTENT(IN)    :: limit
-INTEGER, INTENT(OUT)   :: ier, last
+real, intent(in)  :: a, b, epsabs, epsrel
+real, intent(out) :: result, abserr
+integer, intent(in)    :: limit
+integer, intent(out)   :: ier, last
 
 real, EXTERNAL :: f
 
@@ -427,52 +427,52 @@ IF (limit < 1) RETURN
 CALL qxgse(f, a, b, epsabs, epsrel, limit, result, abserr, ier, last)
 
 RETURN
-END SUBROUTINE qxgs
+end subroutine qxgs
 
 
-RECURSIVE SUBROUTINE qxgse(f, a, b, epsabs, epsrel, limit, result, abserr, ier, last)
+RECURSIVE subroutine qxgse(f, a, b, epsabs, epsrel, limit, result, abserr, ier, last)
 
-!       THE ROUTINE CALCULATES AN APPROXIMATION RESULT TO A
+!       THE R(out)INE CALCULATES AN APPROXIMATION RESULT TO A
 !       DEFINITE INTEGRAL I = INTEGRAL OF F OVER (A,B),
 !       HOPEFULLY SATISFYING FOLLOWING CLAIM FOR ACCURACY
 !       ABS(I-RESULT).LE.MAX(EPSABS,EPSREL*ABS(I)).
 
-!   PARAMETERS
+!   parameterS
 !    ON ENTRY
-!       F      - REAL
-!                FUNCTION SUBPROGRAM DEFINING THE INTEGRAND
-!                FUNCTION F(X). THE ACTUAL NAME FOR F NEEDS TO BE
+!       F      - real
+!                function SUBPROGRAM DEFINING THE INTEGRAND
+!                function F(X). THE ACTUAL NAME FOR F NEEDS TO BE
 !                DECLARED E X T E R N A L IN THE DRIVER PROGRAM.
 
-!       A      - REAL
+!       A      - real
 !                LOWER LIMIT OF INTEGRATION
 
-!       B      - REAL
+!       B      - real
 !                UPPER LIMIT OF INTEGRATION
 
-!       EPSABS - REAL
+!       EPSABS - real
 !                ABSOLUTE ACCURACY REQUESTED
 
-!       EPSREL - REAL
+!       EPSREL - real
 !                RELATIVE ACCURACY REQUESTED
 
-!       LIMIT  - INTEGER
+!       LIMIT  - integer
 !                GIVES AN UPPERBOUND ON THE NUMBER OF SUBINTERVALS
 !                IN THE PARTITION OF (A,B)
 
 !    ON RETURN
-!       RESULT - REAL
+!       RESULT - real
 !                APPROXIMATION TO THE INTEGRAL
 
-!       ABSERR - REAL
+!       ABSERR - real
 !                ESTIMATE OF THE MODULUS OF THE ABSOLUTE ERROR,
 !                WHICH SHOULD EQUAL OR EXCEED ABS(I-RESULT)
 
-!       IER    - INTEGER
+!       IER    - integer
 !                IER = 0 NORMAL AND RELIABLE TERMINATION OF THE
-!                        ROUTINE. IT IS ASSUMED THAT THE REQUESTED
+!                        R(out)INE. IT IS ASSUMED THAT THE REQUESTED
 !                        ACCURACY HAS BEEN ACHIEVED.
-!                IER > 0 ABNORMAL TERMINATION OF THE ROUTINE
+!                IER > 0 ABNORMAL TERMINATION OF THE R(out)INE
 !                        THE ESTIMATES FOR INTEGRAL AND ERROR ARE
 !                        LESS RELIABLE. IT IS ASSUMED THAT THE
 !                        REQUESTED ACCURACY HAS NOT BEEN ACHIEVED.
@@ -480,7 +480,7 @@ RECURSIVE SUBROUTINE qxgse(f, a, b, epsabs, epsrel, limit, result, abserr, ier, 
 !                    = 1 MAXIMUM NUMBER OF SUBDIVISIONS ALLOWED
 !                        HAS BEEN ACHIEVED. ONE CAN ALLOW MORE SUB-
 !                        DIVISIONS BY INCREASING THE VALUE OF LIMIT
-!                        (AND TAKING THE ACCORDING DIMENSION
+!                        (AND TAKING THE ACCORDING dimension
 !                        ADJUSTMENTS INTO ACCOUNT). HOWEVER, IF
 !                        THIS YIELDS NO IMPROVEMENT IT IS ADVISED
 !                        TO ANALYZE THE INTEGRAND IN ORDER TO
@@ -515,56 +515,56 @@ RECURSIVE SUBROUTINE qxgse(f, a, b, epsabs, epsrel, limit, result, abserr, ier, 
 !                        ARE SET TO ZERO. ALIST(1) AND BLIST(1)
 !                        ARE SET TO A AND B RESPECTIVELY.
 
-!       ALIST  - REAL
-!                VECTOR OF DIMENSION AT LEAST LIMIT, THE FIRST
-!                 LAST  ELEMENTS OF WHICH ARE THE LEFT END POINTS
+!       ALIST  - real
+!                VECTOR OF dimension AT LEAST LIMIT, THE FIRST
+!                 LAST  ELEMENTS OF WHICH ARE THE LEFT end POINTS
 !                OF THE SUBINTERVALS IN THE PARTITION OF THE
 !                GIVEN INTEGRATION RANGE (A,B)
 
-!       BLIST  - REAL
-!                VECTOR OF DIMENSION AT LEAST LIMIT, THE FIRST
-!                 LAST  ELEMENTS OF WHICH ARE THE RIGHT END POINTS
+!       BLIST  - real
+!                VECTOR OF dimension AT LEAST LIMIT, THE FIRST
+!                 LAST  ELEMENTS OF WHICH ARE THE RIGHT end POINTS
 !                OF THE SUBINTERVALS IN THE PARTITION OF THE GIVEN
 !                INTEGRATION RANGE (A,B)
 
-!       RLIST  - REAL
-!                VECTOR OF DIMENSION AT LEAST LIMIT, THE FIRST `LAST'
+!       RLIST  - real
+!                VECTOR OF dimension AT LEAST LIMIT, THE FIRST `LAST'
 !                ELEMENTS OF WHICH ARE THE INTEGRAL APPROXIMATIONS ON
 !                THE SUBINTERVALS
 
-!       ELIST  - REAL
-!                VECTOR OF DIMENSION AT LEAST LIMIT, THE FIRST
+!       ELIST  - real
+!                VECTOR OF dimension AT LEAST LIMIT, THE FIRST
 !                 LAST  ELEMENTS OF WHICH ARE THE MODULI OF THE
 !                ABSOLUTE ERROR ESTIMATES ON THE SUBINTERVALS
 
-!       IORD   - INTEGER
-!                VECTOR OF DIMENSION AT LEAST LIMIT, THE FIRST K ELEMENTS
+!       IORD   - integer
+!                VECTOR OF dimension AT LEAST LIMIT, THE FIRST K ELEMENTS
 !                OF WHICH ARE POINTERS TO THE ERROR ESTIMATES OVER THE
 !                SUBINTERVALS, SUCH THAT ELIST(IORD(1)), ..., ELIST(IORD(K))
 !                FORM A DECREASING SEQUENCE, WITH K = LAST IF
 !                LAST <= (LIMIT/2+2), AND K = LIMIT+1-LAST OTHERWISE
 
-!       LAST   - INTEGER
+!       LAST   - integer
 !                NUMBER OF SUBINTERVALS ACTUALLY PRODUCED IN THE
 !                SUBDIVISION PROCESS
 
-!       VALP   - REAL
-!       VALN     ARRAYS OF DIMENSION AT LEAST (21,LIMIT) USED TO
-!                SAVE THE FUNCTIONAL VALUES
+!       VALP   - real
+!       VALN     ARRAYS OF dimension AT LEAST (21,LIMIT) USED TO
+!                SAVE THE functionAL VALUES
 
-!       LP     - INTEGER
-!       LN       VECTORS OF DIMENSION AT LEAST LIMIT, USED TO
-!                STORE THE ACTUAL NUMBER OF FUNCTIONAL VALUES
+!       LP     - integer
+!       LN       VECTORS OF dimension AT LEAST LIMIT, USED TO
+!                STORE THE ACTUAL NUMBER OF functionAL VALUES
 !                SAVED IN THE CORRESPONDING COLUMN OF VALP,VALN
 
-!***ROUTINES CALLED  F, SPMPAR, QELG, QXLQM, QPSRT, QXRRD, QXCPY
+!***R(out)INES CALLED  F, SPMPAR, QELG, QXLQM, QPSRT, QXRRD, QXCPY
 
 USE constants_NSWC
 
-real, INTENT(IN)   :: a, b, epsabs, epsrel
-real, INTENT(OUT)  :: result, abserr
-INTEGER, INTENT(IN)     :: limit
-INTEGER, INTENT(OUT)    :: ier, last
+real, intent(in)   :: a, b, epsabs, epsrel
+real, intent(out)  :: result, abserr
+integer, intent(in)     :: limit
+integer, intent(out)    :: ier, last
 
 real, EXTERNAL :: f
 
@@ -574,10 +574,10 @@ real :: abseps, alist(limit), area, area1, area12, area2, a1, a2, b1, &
              erro12, errsum, ertest, oflow, rerr, resabs, reseps, res3la(3), &
              rlist(limit), rlist2(52), small, t, uflow, valp(21,limit),    &
              valn(21,limit), vp1(21), vp2(21), vn1(21), vn2(21), defabs
-INTEGER   :: id, ierro, iord(limit), iroff1, iroff2, iroff3, jupbnd, k,  &
+integer   :: id, ierro, iord(limit), iroff1, iroff2, iroff3, jupbnd, k,  &
              ksgn, lp(limit), ln(limit), ktmin, maxerr, nres, nrmax, numrl2, &
              lp1, lp2, ln1, ln2
-LOGICAL   :: extrap, noext
+logical   :: extrap, noext
 
 !            MACHINE DEPENDENT CONSTANTS
 !            ---------------------------
@@ -590,7 +590,7 @@ epmach = dpmpar(1)
 uflow = dpmpar(2)
 oflow = dpmpar(3)
 
-!            TEST ON VALIDITY OF PARAMETERS
+!            TEST ON VALIDITY OF parameterS
 !            ------------------------------
 last = 0
 result = 0.0D0
@@ -734,14 +734,14 @@ DO last = 2, limit
   CALL qxcpy(valn(1:,last), vn1, ln1)
   ln(last) = ln1
   
-!      CALL SUBROUTINE QPSRT TO MAINTAIN THE DESCENDING ORDERING
+!      CALL subroutine QPSRT TO MAINTAIN THE DESCENDING ORDERING
 !      IN THE LIST OF ERROR ESTIMATES AND SELECT THE SUBINTERVAL
 !      WITH NRMAX-TH LARGEST ERROR ESTIMATE (TO BE BISECTED NEXT).
   
   30 CALL qpsrt(limit, last, maxerr, errmax, elist, iord, nrmax)
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   IF(errsum <= errbnd) GO TO 115
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   IF (ier /= 0) GO TO 100
   IF (last == 2) GO TO 80
   IF (noext) CYCLE
@@ -756,7 +756,7 @@ DO last = 2, limit
   nrmax = 2
   
 !      THE BOUND 0.3*ERTEST HAS BEEN INTRODUCED TO PERFORM A
-!      MORE CAUTIOUS EXTRAPOLATION THAN IN THE ORIGINAL DQAGSE ROUTINE
+!      MORE CAUTIOUS EXTRAPOLATION THAN IN THE ORIGINAL DQAGSE R(out)INE
   
   40 IF (ierro == 3 .OR. erlarg <= 0.3D0*ertest) GO TO 60
   
@@ -770,10 +770,10 @@ DO last = 2, limit
   DO k = id, jupbnd
     maxerr = iord(nrmax)
     errmax = elist(maxerr)
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
     IF(ABS(blist(maxerr) - alist(maxerr)) > small) CYCLE
     nrmax = nrmax + 1
-  END DO
+  end DO
   
 !      PERFORM EXTRAPOLATION.
   
@@ -788,7 +788,7 @@ DO last = 2, limit
   result = reseps
   correc = erlarg
   ertest = MAX(epsabs,rerr*ABS(reseps))
-! ***JUMP OUT OF DO-LOOP
+! ***JUMP (out) OF DO-LOOP
   IF (abserr <= ertest) GO TO 100
   
 !      PREPARE BISECTION OF THE SMALLEST INTERVAL.
@@ -806,7 +806,7 @@ DO last = 2, limit
   erlarg = errsum
   ertest = errbnd
   rlist2(2) = area
-END DO
+end DO
 
 !      SET FINAL RESULT AND ERROR ESTIMATE.
 !      ------------------------------------
@@ -835,56 +835,56 @@ GO TO 130
 abserr = errsum
 130 IF (ier > 2) ier = ier - 1
 999 RETURN
-END SUBROUTINE qxgse
+end subroutine qxgse
 
 
-RECURSIVE SUBROUTINE qxcpy (a, b, l)
+RECURSIVE subroutine qxcpy (a, b, l)
 
-!  TO COPY THE REAL VECTOR B OF LENGTH L   I N T O
-!          THE REAL VECTOR A OF LENGTH L
+!  TO COPY THE real VECTOR B OF LENGTH L   I N T O
+!          THE real VECTOR A OF LENGTH L
 
 USE constants_NSWC
 
-INTEGER, INTENT(IN)   :: l
-real, DIMENSION(:), INTENT(IN)  :: b
-real, DIMENSION(:), INTENT(OUT) :: a
+integer, intent(in)   :: l
+real, dimension(:), intent(in)  :: b
+real, dimension(:), intent(out) :: a
 
 a(1:l) = b(1:l)
 RETURN
-END SUBROUTINE qxcpy
+end subroutine qxcpy
 
 
-RECURSIVE SUBROUTINE qxlqm (f, a, b, result, abserr, resabs, resasc, vr, vs, lr, ls,  &
+RECURSIVE subroutine qxlqm (f, a, b, result, abserr, resabs, resasc, vr, vs, lr, ls,  &
                   key, epmach, uflow, oflow)
 
 !    TO COMPUTE I = INTEGRAL OF F OVER (A, B), WITH ERROR ESTIMATE
 !               J = INTEGRAL OF ABS(F) OVER (A,B)
 
-!   PARAMETERS
+!   parameterS
 !    ON ENTRY
-!      F      - REAL
-!               FUNCTION SUBPROGRAM DEFINING THE INTEGRAND
-!               FUNCTION F(X). THE ACTUAL NAME FOR F NEEDS TO BE
+!      F      - real
+!               function SUBPROGRAM DEFINING THE INTEGRAND
+!               function F(X). THE ACTUAL NAME FOR F NEEDS TO BE
 !               DECLARED E X T E R N A L IN THE DRIVER PROGRAM.
 
-!      A      - REAL
+!      A      - real
 !               LOWER LIMIT OF INTEGRATION
 
-!      B      - REAL
+!      B      - real
 !               UPPER LIMIT OF INTEGRATION
 
-!      VR     - REAL
+!      VR     - real
 !               VECTOR OF LENGTH LR CONTAINING THE
-!               SAVED  FUNCTIONAL VALUES OF POSITIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF POSITIVE ABSCISSAS
 
-!      VS     - REAL
+!      VS     - real
 !               VECTOR OF LENGTH LS CONTAINING THE
-!               SAVED  FUNCTIONAL VALUES OF NEGATIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF NEGATIVE ABSCISSAS
 
-!      LR     - INTEGER
+!      LR     - integer
 !      LS       NUMBER OF ELEMENTS IN VR,VS RESPECTIVELY
 
-!    KEY    - INTEGER
+!    KEY    - integer
 !             KEY FOR CHOICE OF LOCAL INTEGRATION RULE
 !             RMS FORMULAS ARE USED WITH
 !              13 - 19               POINTS IF KEY < 1,
@@ -893,55 +893,55 @@ RECURSIVE SUBROUTINE qxlqm (f, a, b, result, abserr, resabs, resasc, vr, vs, lr,
 !                   19 -  27  - (41) POINTS IF KEY = 3,
 !                         27  -  41  POINTS IF KEY > 3.
 
-!             (RULES) USED IF THE FUNCTION APPEARS REGULAR ENOUGH
+!             (RULES) USED IF THE function APPEARS REGULAR ENOUGH
 
-!      EPMACH - REAL
+!      EPMACH - real
 !               THE RELATIVE PRECISION OF THE FLOATING
 !               ARITHMETIC BEING USED.
 
-!      UFLOW  - REAL
+!      UFLOW  - real
 !               THE SMALLEST POSITIVE MAGNITUDE.
 
-!      OFLOW  - REAL
+!      OFLOW  - real
 !               THE LARGEST POSITIVE MAGNITUDE.
 
 !    ON RETURN
-!      RESULT - REAL
+!      RESULT - real
 !               APPROXIMATION TO THE INTEGRAL I
 
-!      ABSERR - REAL
+!      ABSERR - real
 !               ESTIMATE OF THE MODULUS OF THE ABSOLUTE ERROR,
 !               WHICH SHOULD NOT EXCEED ABS(I-RESULT)
 
-!      RESABS - REAL
+!      RESABS - real
 !               APPROXIMATION TO THE INTEGRAL J
 
-!      RESASC - REAL
+!      RESASC - real
 !               APPROXIMATION TO THE INTEGRAL OF ABS(F-I/(B-A)) OVER (A,B)
 
-!      VR     - REAL
+!      VR     - real
 !               VECTOR OF LENGTH LR CONTAINING THE
-!               SAVED  FUNCTIONAL VALUES OF POSITIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF POSITIVE ABSCISSAS
 
-!      VS     - REAL
+!      VS     - real
 !               VECTOR OF LENGTH LS CONTAINING THE
-!               SAVED  FUNCTIONAL VALUES OF NEGATIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF NEGATIVE ABSCISSAS
 
-!      LR     - INTEGER
+!      LR     - integer
 !      LS       NUMBER OF ELEMENTS IN VR,VS RESPECTIVELY
 
-!***ROUTINES CALLED  QXRUL
+!***R(out)INES CALLED  QXRUL
 
 USE constants_NSWC
 
-real, INTENT(IN)                   :: a, b, epmach, oflow, uflow
-INTEGER, INTENT(IN)                     :: key
-real, INTENT(OUT)                  :: result, abserr, resabs, resasc
-real, DIMENSION(:), INTENT(IN OUT) :: vr, vs
-INTEGER, INTENT(IN OUT)                 :: lr, ls
+real, intent(in)                   :: a, b, epmach, oflow, uflow
+integer, intent(in)                     :: key
+real, intent(out)                  :: result, abserr, resabs, resasc
+real, dimension(:), intent(inout) :: vr, vs
+integer, intent(inout)                 :: lr, ls
 
 real :: t, resg, resk, errold
-INTEGER   :: k, k0, k1, k2, key1
+integer   :: k, k0, k1, k2, key1
 
 real, EXTERNAL :: f
 
@@ -965,32 +965,32 @@ DO k = k1, k2
   IF (abserr > errold*0.16D0) EXIT
   IF (abserr < 1000.0D0*epmach*resabs) CYCLE
   errold = abserr
-END DO
+end DO
 
 RETURN
-END SUBROUTINE qxlqm
+end subroutine qxlqm
 
 
-RECURSIVE SUBROUTINE qxrul (f, xl, xu, y, ya, ym, ke, k1, fv1, fv2, l1, l2)
+RECURSIVE subroutine qxrul (f, xl, xu, y, ya, ym, ke, k1, fv1, fv2, l1, l2)
 
 !    TO COMPUTE I = INTEGRAL OF F OVER (A,B), WITH ERROR ESTIMATE
 !    AND CONDITIONALLY COMPUTE
 !               J = INTEGRAL OF ABS(F) OVER (A,B)
 !               BY USING AN  RMS RULE
-!   PARAMETERS
+!   parameterS
 !    ON ENTRY
-!      F      - REAL
-!               FUNCTION SUBPROGRAM DEFINING THE INTEGRAND
-!               FUNCTION F(X). THE ACTUAL NAME FOR F NEEDS TO BE
+!      F      - real
+!               function SUBPROGRAM DEFINING THE INTEGRAND
+!               function F(X). THE ACTUAL NAME FOR F NEEDS TO BE
 !               DECLARED E X T E R N A L IN THE DRIVER PROGRAM.
 
-!      XL     - REAL
+!      XL     - real
 !               LOWER LIMIT OF INTEGRATION
 
-!      XU     - REAL
+!      XU     - real
 !               UPPER LIMIT OF INTEGRATION
 
-!      KE     - INTEGER
+!      KE     - integer
 !             KEY FOR CHOICE OF LOCAL INTEGRATION RULE
 !             AN RMS RULE IS USED WITH
 !                 13      POINTS IF KE  = 2,
@@ -998,57 +998,57 @@ RECURSIVE SUBROUTINE qxrul (f, xl, xu, y, ya, ym, ke, k1, fv1, fv2, l1, l2)
 !                 27      POINTS IF KE  = 4,
 !                 42      POINTS IF KE  = 5
 
-!      K1     INTEGER
+!      K1     integer
 !             VALUE OF KEY FOR WHICH THE ADDITIONAL ESTIMATES
 !             YA, YM ARE TO BE COMPUTED
 
-!      FV1    - REAL
+!      FV1    - real
 !               VECTOR CONTAINING L1
-!               SAVED  FUNCTIONAL VALUES OF POSITIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF POSITIVE ABSCISSAS
 
-!      FV2    - REAL
+!      FV2    - real
 !               VECTOR CONTAINING L2
-!               SAVED  FUNCTIONAL VALUES OF NEGATIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF NEGATIVE ABSCISSAS
 
-!      L1     - INTEGER
+!      L1     - integer
 !      L2       NUMBER OF ELEMENTS IN FV1,FV2  RESPECTIVELY
 
 !    ON RETURN
-!      Y      - REAL
+!      Y      - real
 !               APPROXIMATION TO THE INTEGRAL I
 !               RESULT IS COMPUTED BY APPLYING THE REQUESTED RMS RULE
 
-!      YA     - REAL
+!      YA     - real
 !               IF KEY = K1  APPROXIMATION TO THE INTEGRAL J
 !               ELSE UNCHANGED
 
-!      YM     - REAL
+!      YM     - real
 !               IF KEY = K1  APPROXIMATION TO THE INTEGRAL OF
 !                              ABS(F-I/(XU-XL)   OVER (XL,XU)
 !               ELSE UNCHANGED
 
-!      FV1    - REAL
+!      FV1    - real
 !               VECTOR CONTAINING L1
-!               SAVED  FUNCTIONAL VALUES OF POSITIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF POSITIVE ABSCISSAS
 
-!      FV2    - REAL
+!      FV2    - real
 !               VECTOR CONTAINING L2
-!               SAVED  FUNCTIONAL VALUES OF NEGATIVE ABSCISSAS
+!               SAVED  functionAL VALUES OF NEGATIVE ABSCISSAS
 
-!      L1     - INTEGER
+!      L1     - integer
 !      L2       NUMBER OF ELEMENTS IN FV1,FV2  RESPECTIVELY
 
 !------------------------
 USE constants_NSWC
 
-real, INTENT(IN)                   :: xl, xu
-INTEGER, INTENT(IN)                     :: ke, k1
-real, INTENT(OUT)                  :: y, ya, ym
-real, DIMENSION(:), INTENT(IN OUT) :: fv1, fv2
-INTEGER, INTENT(IN OUT)                 :: l1, l2
+real, intent(in)                   :: xl, xu
+integer, intent(in)                     :: ke, k1
+real, intent(out)                  :: y, ya, ym
+real, dimension(:), intent(inout) :: fv1, fv2
+integer, intent(inout)                 :: l1, l2
 
 real :: ldl, y2, aa, bb, c
-INTEGER   :: istart(4) = (/ 0, 7, 17, 31 /), length(4) = (/ 7, 10, 14, 21 /), &
+integer   :: istart(4) = (/ 0, 7, 17, 31 /), length(4) = (/ 7, 10, 14, 21 /), &
              j, i, is, k, ks
 
 real, EXTERNAL :: f
@@ -1107,7 +1107,7 @@ DO i = 1, ks
   IF (i > l2) fv2(i) = f(aa - c)
   j = is + i
   y = y + (fv1(i) + fv2(i))*ww(j)
-END DO
+end DO
 
 y2 = y
 y = y*bb
@@ -1119,7 +1119,7 @@ ya = 0.0D0
 DO i = 1, ks
   j = is + i
   ya = ya + (ABS(fv1(i)) + ABS(fv2(i)))*ww(j)
-END DO
+end DO
 ya = ya*ABS(bb)
 
 y2 = y2*0.5D0
@@ -1127,52 +1127,52 @@ ym = 0.0D0
 DO i = 1, ks
   j = is + i
   ym = ym + (ABS(fv1(i) - y2) + ABS(fv2(i) - y2))*ww(j)
-END DO
+end DO
 ym = ym*ABS(bb)
 RETURN
-END SUBROUTINE qxrul
+end subroutine qxrul
 
 
-RECURSIVE SUBROUTINE qxrrd (f, z, lz, xl, xu, r, s, lr, ls)
+RECURSIVE subroutine qxrrd (f, z, lz, xl, xu, r, s, lr, ls)
 
-!    TO REORDER THE COMPUTED FUNCTIONAL VALUES BEFORE
+!    TO REORDER THE COMPUTED functionAL VALUES BEFORE
 !    THE BISECTION OF AN INTERVAL
 
-!   PARAMETERS
+!   parameterS
 !    ON ENTRY
-!      F      - REAL
-!               FUNCTION SUBPROGRAM DEFINING THE INTEGRAND
-!               FUNCTION F(X). THE ACTUAL NAME FOR F NEEDS TO BE
+!      F      - real
+!               function SUBPROGRAM DEFINING THE INTEGRAND
+!               function F(X). THE ACTUAL NAME FOR F NEEDS TO BE
 !               DECLARED E X T E R N A L IN THE DRIVER PROGRAM.
 
-!      XL     - REAL
+!      XL     - real
 !               LOWER LIMIT OF INTERVAL
 
-!      XU     - REAL
+!      XU     - real
 !               UPPER LIMIT OF INTERVAL
 
-!      Z      - REAL
-!               VECTOR CONTAINING LZ SAVED FUNCTIONAL VALUES
+!      Z      - real
+!               VECTOR CONTAINING LZ SAVED functionAL VALUES
 
-!      LZ     - INTEGER
+!      LZ     - integer
 !               NUMBER OF ELEMENTS IN LZ
 
 !    ON RETURN
-!      R      - REAL
+!      R      - real
 !      S        VECTORS CONTAINING LR, LS
-!               SAVED  FUNCTIONAL VALUES FOR THE NEW INTERVALS
+!               SAVED  functionAL VALUES FOR THE NEW INTERVALS
 
-!      LR     - INTEGER
+!      LR     - integer
 !      LS       NUMBER OF ELEMENTES IN R,S RESPECTIVELY
 
-!***ROUTINES CALLED  F
+!***R(out)INES CALLED  F
 USE constants_NSWC
 
-real, DIMENSION(:), INTENT(IN)  :: z
-real, INTENT(IN)                :: xl, xu
-INTEGER, INTENT(IN)                  :: lz
-real, DIMENSION(:), INTENT(OUT) :: r, s
-INTEGER, INTENT(OUT)                 :: lr, ls
+real, dimension(:), intent(in)  :: z
+real, intent(in)                :: xl, xu
+integer, intent(in)                  :: lz
+real, dimension(:), intent(out) :: r, s
+integer, intent(out)                 :: lr, ls
 
 real :: dlen, centr
 
@@ -1232,6 +1232,6 @@ s(10) = f(centr - dlen*0.96875D0)
 s(11) = z(17)
 ls = 11
 RETURN
-END SUBROUTINE qxrrd
+end subroutine qxrrd
 
-END MODULE adapt_quad
+end module adapt_quad

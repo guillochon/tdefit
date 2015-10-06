@@ -1,6 +1,6 @@
 !Support file for qxgs, in public domain.
 
-MODULE constants_NSWC
+module constants_NSWC
 ! Contains the NSWC functions IPMPAR, SPMPAR, DPMPAR, EPSLN, DEPSLN,
 ! EXPARG & DXPARG
 !-----------------------------------------------------------------------
@@ -11,20 +11,20 @@ MODULE constants_NSWC
 !     Latest revision - 1 February 1997
 !-----------------------------------------------------------------------
 
-INTEGER, PARAMETER     :: dp = SELECTED_REAL_KIND(15, 60)
+integer, parameter     :: dp = SELECTED_real_KIND(15, 60)
 
 CONTAINS
 
-FUNCTION ipmpar (i) RESULT(fn_val)
+function ipmpar (i) RESULT(fn_val)
 !-----------------------------------------------------------------------
 
-!     IPMPAR PROVIDES THE INTEGER MACHINE CONSTANTS FOR THE COMPUTER
-!     THAT IS USED. IT IS ASSUMED THAT THE ARGUMENT I IS AN INTEGER
+!     IPMPAR PROVIDES THE integer MACHINE CONSTANTS FOR THE COMPUTER
+!     THAT IS USED. IT IS ASSUMED THAT THE ARGUMENT I IS AN integer
 !     HAVING ONE OF THE VALUES 1-10. IPMPAR(I) HAS THE VALUE ...
 
-!  INTEGERS.
+!  integerS.
 
-!     ASSUME INTEGERS ARE REPRESENTED IN THE N-DIGIT, BASE-A FORM
+!     ASSUME integerS ARE REPRESENTED IN THE N-DIGIT, BASE-A FORM
 
 !               SIGN ( X(N-1)*A**(N-1) + ... + X(1)*A + X(0) )
 
@@ -67,8 +67,8 @@ FUNCTION ipmpar (i) RESULT(fn_val)
 
 !-----------------------------------------------------------------------
 
-INTEGER, INTENT(IN) :: i
-INTEGER             :: fn_val
+integer, intent(in) :: i
+integer             :: fn_val
 
 SELECT CASE(i)
   CASE( 1)
@@ -93,19 +93,19 @@ SELECT CASE(i)
     fn_val = MAXEXPONENT(1.0D0)
   CASE DEFAULT
     RETURN
-END SELECT
+end SELECT
 
 RETURN
-END FUNCTION ipmpar
+end function ipmpar
 
 
 
-FUNCTION spmpar (i) RESULT(fn_val)
+function spmpar (i) RESULT(fn_val)
 !-----------------------------------------------------------------------
 
 !     SPMPAR PROVIDES THE SINGLE PRECISION MACHINE CONSTANTS FOR
 !     THE COMPUTER BEING USED. IT IS ASSUMED THAT THE ARGUMENT
-!     I IS AN INTEGER HAVING ONE OF THE VALUES 1, 2, OR 3. IF THE
+!     I IS AN integer HAVING ONE OF THE VALUES 1, 2, OR 3. IF THE
 !     SINGLE PRECISION ARITHMETIC BEING USED HAS M BASE B DIGITS AND
 !     ITS SMALLEST AND LARGEST EXPONENTS ARE EMIN AND EMAX, THEN
 
@@ -116,11 +116,11 @@ FUNCTION spmpar (i) RESULT(fn_val)
 !        SPMPAR(3) = B**EMAX*(1 - B**(-M)), THE LARGEST MAGNITUDE.
 !-----------------------------------------------------------------------
 
-INTEGER, INTENT(IN) :: i
-REAL                :: fn_val
+integer, intent(in) :: i
+real                :: fn_val
 
 ! Local variable
-REAL                :: one = 1.0
+real                :: one = 1.0
 
 SELECT CASE (i)
   CASE (1)
@@ -129,19 +129,19 @@ SELECT CASE (i)
     fn_val = TINY(one)
   CASE (3)
     fn_val = HUGE(one)
-END SELECT
+end SELECT
 
 RETURN
-END FUNCTION spmpar
+end function spmpar
 
 
 
-FUNCTION dpmpar (i) RESULT(fn_val)
+function dpmpar (i) RESULT(fn_val)
 !-----------------------------------------------------------------------
 
 !     DPMPAR PROVIDES THE real MACHINE CONSTANTS FOR
 !     THE COMPUTER BEING USED. IT IS ASSUMED THAT THE ARGUMENT
-!     I IS AN INTEGER HAVING ONE OF THE VALUES 1, 2, OR 3. IF THE
+!     I IS AN integer HAVING ONE OF THE VALUES 1, 2, OR 3. IF THE
 !     real ARITHMETIC BEING USED HAS M BASE B DIGITS AND
 !     ITS SMALLEST AND LARGEST EXPONENTS ARE EMIN AND EMAX, THEN
 
@@ -152,11 +152,11 @@ FUNCTION dpmpar (i) RESULT(fn_val)
 !        DPMPAR(3) = B**EMAX*(1 - B**(-M)), THE LARGEST MAGNITUDE.
 !-----------------------------------------------------------------------
 
-INTEGER, INTENT(IN) :: i
-REAL (dp)           :: fn_val
+integer, intent(in) :: i
+real (dp)           :: fn_val
 
 ! Local variable
-REAL (dp)    :: one = 1._dp
+real (dp)    :: one = 1._dp
 
 SELECT CASE (i)
   CASE (1)
@@ -165,28 +165,28 @@ SELECT CASE (i)
     fn_val = TINY(one)
   CASE (3)
     fn_val = HUGE(one)
-END SELECT
+end SELECT
 
 RETURN
-END FUNCTION dpmpar
+end function dpmpar
 
 
-FUNCTION epsln () RESULT(fn_val)
+function epsln () RESULT(fn_val)
 !--------------------------------------------------------------------
 !     THE EVALUATION OF LN(EPS) WHERE EPS IS THE SMALLEST NUMBER
 !     SUCH THAT 1.0 + EPS .GT. 1.0 .  L IS A DUMMY ARGUMENT.
 !--------------------------------------------------------------------
-REAL                :: fn_val
+real                :: fn_val
 
 ! Local variable
-REAL                :: one = 1.0
+real                :: one = 1.0
 
 fn_val = LOG( EPSILON(one) )
 RETURN
-END FUNCTION epsln
+end function epsln
 
 
-FUNCTION exparg (l) RESULT(fn_val)
+function exparg (l) RESULT(fn_val)
 !--------------------------------------------------------------------
 !     IF L = 0 THEN  EXPARG(L) = THE LARGEST POSITIVE W FOR WHICH
 !     EXP(W) CAN BE COMPUTED.
@@ -196,37 +196,37 @@ FUNCTION exparg (l) RESULT(fn_val)
 !
 !     NOTE... ONLY AN APPROXIMATE VALUE FOR EXPARG(L) IS NEEDED.
 !--------------------------------------------------------------------
-INTEGER, INTENT(IN) :: l
-REAL                :: fn_val
+integer, intent(in) :: l
+real                :: fn_val
 
 ! Local variable
-REAL                :: one = 1.0
+real                :: one = 1.0
 
 IF (l == 0) THEN
   fn_val = LOG( HUGE(one) )
 ELSE
   fn_val = LOG( TINY(one) )
-END IF
+end IF
 RETURN
-END FUNCTION exparg
+end function exparg
 
 
-FUNCTION depsln () RESULT(fn_val)
+function depsln () RESULT(fn_val)
 !--------------------------------------------------------------------
 !     THE EVALUATION OF LN(EPS) WHERE EPS IS THE SMALLEST NUMBER
 !     SUCH THAT 1.D0 + EPS .GT. 1.D0 .  L IS A DUMMY ARGUMENT.
 !--------------------------------------------------------------------
-REAL (dp)           :: fn_val
+real (dp)           :: fn_val
 
 ! Local variable
-REAL (dp)    :: one = 1._dp
+real (dp)    :: one = 1._dp
 
 fn_val = LOG( EPSILON(one) )
 RETURN
-END FUNCTION depsln
+end function depsln
 
 
-FUNCTION dxparg (l) RESULT(fn_val)
+function dxparg (l) RESULT(fn_val)
 !--------------------------------------------------------------------
 !     IF L = 0 THEN  DXPARG(L) = THE LARGEST POSITIVE W FOR WHICH
 !     DEXP(W) CAN BE COMPUTED.
@@ -236,19 +236,19 @@ FUNCTION dxparg (l) RESULT(fn_val)
 !
 !     NOTE... ONLY AN APPROXIMATE VALUE FOR DXPARG(L) IS NEEDED.
 !--------------------------------------------------------------------
-INTEGER, INTENT(IN) :: l
-REAL (dp)           :: fn_val
+integer, intent(in) :: l
+real (dp)           :: fn_val
 
 ! Local variable
-REAL (dp)    :: one = 1._dp
+real (dp)    :: one = 1._dp
 
 IF (l == 0) THEN
   fn_val = LOG( HUGE(one) )
 ELSE
   fn_val = LOG( TINY(one) )
-END IF
+end IF
 RETURN
-END FUNCTION dxparg
+end function dxparg
 
-END MODULE constants_NSWC
+end module constants_NSWC
 

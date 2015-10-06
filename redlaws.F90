@@ -34,7 +34,7 @@
 !             = false, if not
 !     R = ratio of total-to-selective extinction
 
-!     OUTPUT:
+!     (out)PUT:
 !     a1_o = extinction coefficient
 
 
@@ -136,7 +136,7 @@
 
 ! ............................................
 ! COMPUTE UV VALUES OF A(lambda)/E(B-V)
-! USING FM FITTING FUNCTION AND R-DEPENDENT 
+! USING FM FITTING function AND R-DEPENDENT 
 ! COEFFICIENTS
 ! ............................................
 
@@ -258,7 +258,7 @@
 !         without regard to bandpass effects brought on by
 !         the level of extinction
 
-!     OUTPUT:
+!     (out)PUT:
 !     a1_o = extinction coefficient A_lambda/E(B-V)
  
 !     Let
@@ -403,7 +403,7 @@
 !         without regard to bandpass effects brought on by
 !         the level of extinction
 
-!     OUTPUT:
+!     (out)PUT:
 !     a1_o = extinction coefficient A_lambda/E(B-V)
  
 !     Let
@@ -561,7 +561,7 @@
 !             = true, if x_o is already sorted
 !             = false, if not
 
-!     OUTPUT:
+!     (out)PUT:
 !     a1_o = extinction coefficient A_lambda/E(B-V)
 !     flag = flag to indicate extrapolation in wavelength.
  

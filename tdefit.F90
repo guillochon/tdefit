@@ -6,7 +6,7 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
@@ -485,7 +485,7 @@ program tdefit
 #endif
                     !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                     call MPI_ALLREDUCE(count(p(1,:,i) .eq. (dble(j-1) - min_search(i))/(max_search(i) - min_search(i))), &
-                        scount(ndiscrete,j-nint(min_search(i))), 1, MPI_INTEGER, MPI_SUM, MPI_COMM_WORLD, ierr)
+                        scount(ndiscrete,j-nint(min_search(i))), 1, MPI_integer, MPI_SUM, MPI_COMM_WORLD, ierr)
 #ifdef VERBOSE_MPI
                     if (my_pe .eq. 0) write(*, *), 'Reducing finished [1]'
 #endif
@@ -734,12 +734,12 @@ program tdefit
 #endif
             !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
             mpi_int_in = nrejections
-            call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+            call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
             gnrejections = mpi_int_out(1)
 
             !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
             mpi_int_in = nreplacements
-            call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+            call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
             gnreplacements = mpi_int_out(1)
 #ifdef VERBOSE_MPI
             if (my_pe .eq. 0) write(*, *), 'Gathering finished [3]'
@@ -759,28 +759,28 @@ program tdefit
 #endif
                 !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                 mpi_int_in = dfcnt
-                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
                 gdfcnt = mpi_int_out(1)
 #ifdef VERBOSE_MPI
                 if (my_pe .eq. 0) write(*, *), 'Reducing [3]'
 #endif
                 !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                 mpi_int_in = dffailcnt
-                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
                 gdffailcnt = mpi_int_out(1)
 #ifdef VERBOSE_MPI
                 if (my_pe .eq. 0) write(*, *), 'Reducing [4]'
 #endif
                 !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                 mpi_int_in = bbcnt
-                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
                 gbbcnt = mpi_int_out(1)
 #ifdef VERBOSE_MPI
                 if (my_pe .eq. 0) write(*, *), 'Reducing [5]'
 #endif
                 !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                 mpi_int_in = bbfailcnt
-                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
                 gbbfailcnt = mpi_int_out(1)
 #ifdef VERBOSE_MPI
                 if (my_pe .eq. 0) write(*, *), 'Reducing finished [5]'
@@ -788,7 +788,7 @@ program tdefit
 
                 !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                 mpi_int_in = bbcalls
-                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_INTEGER8, MPI_SUM, MPI_COMM_WORLD, ierr)
+                call MPI_ALLREDUCE(mpi_int_in, mpi_int_out, 1, MPI_integer8, MPI_SUM, MPI_COMM_WORLD, ierr)
                 gbbcalls = mpi_int_out(1)
 
                 if (my_pe .eq. 0) then
@@ -811,7 +811,7 @@ program tdefit
 #endif
                         !call MPI_BARRIER(MPI_COMM_WORLD, ierr)
                         call MPI_ALLREDUCE(count(p(nstep,:,i) .eq. (dble(j-1) - min_search(i))/(max_search(i) - min_search(i))), &
-                            scount(mm,j-nint(min_search(i))), 1, MPI_INTEGER, MPI_SUM, MPI_COMM_WORLD, ierr)
+                            scount(mm,j-nint(min_search(i))), 1, MPI_integer, MPI_SUM, MPI_COMM_WORLD, ierr)
 #ifdef VERBOSE_MPI
                         if (my_pe .eq. 0) write(*, *), 'Reducing finished [6]'
 #endif

@@ -3,7 +3,7 @@
       subroutine splt (x, y, yp, nxy, t_o, nt, tsorted,  &
                        sigma, spl_o)
 
-! OUTLINE:
+! (out)LINE:
 ! "Tense" cubic spline interpolator, adapted from IDL.  
 ! Normally set sigma to 1.0.
 ! Converted to Fortran by Marshall McCall, 99 June, using as
@@ -42,7 +42,7 @@
 !               fit. If sigma is large, (e.g., greater than 10), then 
 !               the fit will be like a polynomial interpolation.
  
-! OUTPUTS:
+! (out)PUTS:
 !	spline returns a vector of interpolated ordinates.
 !	spl_o(i) = value of the function at t_o(i).
  

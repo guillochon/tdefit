@@ -6,7 +6,7 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
@@ -18,7 +18,7 @@ function filterfunc(nu) result(frac)
     use tdefit_interface, ONLY: bisect
 
     integer :: i
-    real, INTENT(IN) :: nu
+    real, intent(in) :: nu
     real :: frac
 
     i = bisect(filt_resp(bandi,1:filt_len(bandi),1), nu)
@@ -37,7 +37,7 @@ function filterintfunc(nu) result(frac)
     use constants
 
     integer :: i
-    real, INTENT(IN) :: nu
+    real, intent(in) :: nu
     real :: frac!, frac2
 
     if (bandi .eq. -1) then

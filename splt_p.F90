@@ -2,7 +2,7 @@
 
       subroutine splt_p (x_o, y_o, nxy, xsorted, sigma, x, y, yp)
 
-! OUTLINE:
+! (out)LINE:
 ! Subroutine to compute first derivatives for the
 ! "Tense" cubic spline interpolator adapted from IDL.  
 ! Normally set sigma to 1.0.
@@ -32,7 +32,7 @@
 !               fit. If sigma is large, (e.g., greater than 10), then 
 !               the fit will be like a polynomial interpolation.
 
-! OUTPUTS:
+! (out)PUTS:
 !	x:      The abscissa vector, in ascending order.
 !	y:      The vector of ordinate values corresponding to x.
 !	yp:     The vector of second derivatives at each x.

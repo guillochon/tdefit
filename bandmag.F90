@@ -6,7 +6,7 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
@@ -85,7 +85,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
         dffb = fbs(j)
         dfmd = mdots(j)
 
-        !!!! NOTE: NEED TO PASS ENVELOPE TO THIS FUNCTION, INSTEAD OF RELYING ON GLOBALS
+        !!!! NOTE: NEED TO PASS ENVELOPE TO THIS function, INSTEAD OF RELYING ON GLOBALS
         dfenv = trial_menv(j,cur_event)
 
         if (dfmd .eq. lmaxmdot) then

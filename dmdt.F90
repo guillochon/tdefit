@@ -6,7 +6,7 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
@@ -231,7 +231,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
 
     do i = begi, endi
         do j = 2, intl
-            dm(i) = dm(i) + dexp(-tdes(i)/circular_time)*dexp(tint(i,j)-tint(i,j-1))mdint(i,j)
+            !dm(i) = dm(i) + dexp(-tdes(i)/circular_time)*dexp(tint(i,j)-tint(i,j-1))mdint(i,j)
             ! NOT FINISHED
         enddo
     enddo

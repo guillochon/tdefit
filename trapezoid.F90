@@ -6,7 +6,7 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
@@ -19,9 +19,9 @@ recursive subroutine trapezoid(func,minx,maxx,div,val)
     use tdefit_interface, only: is_abnormal
 
     real, external    :: func
-    real, intent(IN)  :: minx, maxx
-    integer, intent(IN)           :: div
-    real, intent(OUT) :: val
+    real, intent(in)  :: minx, maxx
+    integer, intent(in)           :: div
+    real, intent(out) :: val
 
     integer :: i
     real :: coeff, temporary

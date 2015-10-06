@@ -6,21 +6,21 @@
 !(at your option) any later version.
 !
 !TDEFit is distributed in the hope that it will be useful,
-!but WITHOUT ANY WARRANTY; without even the implied warranty of
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
 !MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 !GNU General Public License for more details.
 !
 !You should have received a copy of the GNU General Public License
 !along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
 
-SUBROUTINE indexing_re(arr,index)
+subroutine indexing_re(arr,index)
     USE tdefit_util, ONLY : arth,assert_eq,tdefit_error,swap
-    real, DIMENSION(:), INTENT(IN) :: arr
-    integer, DIMENSION(:), INTENT(OUT) :: index
-    integer, PARAMETER :: NN=15, NSTACK=50
+    real, dimension(:), intent(in) :: arr
+    integer, dimension(:), intent(out) :: index
+    integer, parameter :: NN=15, NSTACK=50
     real :: a
     integer :: n,k,i,j,indext,jstack,l,r
-    integer, DIMENSION(NSTACK) :: istack
+    integer, dimension(NSTACK) :: istack
     n=assert_eq(size(index),size(arr),'indexing_re')
     index=arth(1,1,n)
     jstack=0
@@ -80,25 +80,25 @@ SUBROUTINE indexing_re(arr,index)
     end do
     CONTAINS
 
-    SUBROUTINE icomp_xchg(i,j)
-    integer, INTENT(INOUT) :: i,j
+    subroutine icomp_xchg(i,j)
+    integer, intent(inout) :: i,j
     integer :: swp
     if (arr(j) < arr(i)) then
         swp=i
         i=j
         j=swp
     end if
-    END SUBROUTINE icomp_xchg
-    END SUBROUTINE indexing_re
+    end subroutine icomp_xchg
+    end subroutine indexing_re
 
-    SUBROUTINE indexing_i4b(iarr,index)
+    subroutine indexing_i4b(iarr,index)
     USE tdefit_util, ONLY : arth,assert_eq,tdefit_error,swap
-    integer, DIMENSION(:), INTENT(IN) :: iarr
-    integer, DIMENSION(:), INTENT(OUT) :: index
-    integer, PARAMETER :: NN=15, NSTACK=50
+    integer, dimension(:), intent(in) :: iarr
+    integer, dimension(:), intent(out) :: index
+    integer, parameter :: NN=15, NSTACK=50
     integer :: a
     integer :: n,k,i,j,indext,jstack,l,r
-    integer, DIMENSION(NSTACK) :: istack
+    integer, dimension(NSTACK) :: istack
     n=assert_eq(size(index),size(iarr),'indexing_re')
     index=arth(1,1,n)
     jstack=0
@@ -158,13 +158,13 @@ SUBROUTINE indexing_re(arr,index)
     end do
     CONTAINS
 
-    SUBROUTINE icomp_xchg(i,j)
-    integer, INTENT(INOUT) :: i,j
+    subroutine icomp_xchg(i,j)
+    integer, intent(inout) :: i,j
     integer :: swp
     if (iarr(j) < iarr(i)) then
         swp=i
         i=j
         j=swp
     end if
-    END SUBROUTINE icomp_xchg
-END SUBROUTINE indexing_i4b
+    end subroutine icomp_xchg
+end subroutine indexing_i4b

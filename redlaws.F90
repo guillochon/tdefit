@@ -1,3 +1,5 @@
+! Released under GPL license, from [http://adsabs.harvard.edu/abs/2004AJ....128.2144M]
+
       subroutine law_fmr (x_o, nx, xsorted, R, a1_o)
 
 !     2005 Aug 22:  Added law_odo (i.e., O'Donnell 1994)

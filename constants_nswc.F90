@@ -1,3 +1,5 @@
+!Support file for qxgs, in public domain.
+
 MODULE constants_NSWC
 ! Contains the NSWC functions IPMPAR, SPMPAR, DPMPAR, EPSLN, DEPSLN,
 ! EXPARG & DXPARG

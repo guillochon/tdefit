@@ -1,3 +1,5 @@
+! qxgs, public domain
+
 MODULE adapt_quad
 ! Module for adaptive quadrature.
 ! Adapted from TOMS algorithm 691.

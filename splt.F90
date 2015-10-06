@@ -1,3 +1,5 @@
+! Support file for redlaws, released under GPL license [http://adsabs.harvard.edu/abs/2004AJ....128.2144M]
+
       subroutine splt (x, y, yp, nxy, t_o, nt, tsorted,  &
                        sigma, spl_o)
 

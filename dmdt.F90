@@ -39,11 +39,13 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     real, dimension(size(tdes)), intent(out), optional :: im, rhom
     real, dimension(:), allocatable :: temporary
     integer, intent(in), optional :: mode
+    integer, parameter :: intl = 100
     real, intent(in), optional :: ades
 
     real :: betafrac, emin, emid, emax, epscor, edenom, orb_ener_correct, &
             time_corr, relativity_corr, sc_mh, circular_time, tnot, peaktime
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
+    real, dimension(size(tdes),intl) :: md1int, md2int, mdint, tint, es1int, es2int
     !real, dimension(:), allocatable :: kernel, temp_mdot
     integer :: i, j, z, bi, ei, begi, endi, cbegi
 
@@ -142,29 +144,40 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     begi = 1
     endi = size(tdes)
 
-    !tnot = circular_time - pi_G*isqrt2*sc_mh/((-emin)**1.5d0)
-    tnot = 0.
-
     edenom = -emin
 
     do i = begi, endi
-        if (newt(i) - tnot .le. 0.d0) then
+        if (newt(i) .le. 0.d0) then
             begi = i+1
             cycle
         endif
 
-        ratio(i) = (-((pi_G*isqrt2*sc_mh/(newt(i) - tnot))**two_th) - emin - orb_ener_correct)/edenom
+        ratio(i) = (-((pi_G*isqrt2*sc_mh/newt(i))**two_th) - emin - orb_ener_correct)/edenom
 
         if (ratio(i) .le. 0.d0) then
             begi = i+1
             cycle
         endif
 
-        if (ratio(i) .ge. 1.d0 .or. (newt(i) - tnot) .gt. orb_period) then
+        if (ratio(i) .ge. 1.d0 .or. newt(i) .gt. orb_period) then
             endi = i-1
             exit
         endif
     enddo
+
+    if (begi .gt. endi) return
+
+    if (viscous_dmdt) then
+        do i = begi, endi
+            do j = 1, intl
+                tint(i,j) = (pi_G*isqrt2*sc_mh)/(-((j-1.)/(intl-1.)*ratio(i)*edenom - emin - orb_ener_correct))**1.5d0
+                es1int(i,j) = d_emin(bi) + (j-1.)/(intl-1.)*ratio(i)*(-d_emin(bi))
+                es2int(i,j) = d_emin(ei) + (j-1.)/(intl-1.)*ratio(i)*(-d_emin(ei))
+            enddo
+            call interp_flash_output(DDAT_ARR, bi, begi, es1int(i,:), md1int(i,:))
+            call interp_flash_output(DDAT_ARR, ei, begi, es2int(i,:), md2int(i,:))
+        enddo
+    endif
 
     es(begi:endi) = d_emin(bi) + ratio(begi:endi)*(-d_emin(bi))
     call interp_flash_output(DDAT_ARR, bi, begi, es(begi:endi), md1(begi:endi))
@@ -184,7 +197,6 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
         call interp_flash_output(RHODDAT_ARR, ei, begi, es(begi:endi), rhomd2(begi:endi))
     endif
 
-    if (begi .gt. endi) return
     !local_kerw = ceiling(final_kerw*(endi-begi+1))
     !allocate(kernel(6*int(local_kerw)+1))
     !do i = (size(kernel)-1)/2 + 1, size(kernel)
@@ -193,9 +205,21 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     !kernel(1:(size(kernel)-1)/2) = kernel(size(kernel):(size(kernel)-1)/2+2:-1)
 
     dm(begi:endi) = one_th*(twopi*G*sc_mh)**two_th/&
-        (newt(begi:endi)-tnot)**five_th*dexp(betafrac*&
+        newt(begi:endi)**five_th*dexp(betafrac*&
         (dlog(md2(begi:endi))-dlog(md1(begi:endi))) + dlog(md1(begi:endi)))*&
-        trial_ms0(cur_event)*(newt(begi:endi))/tdes(begi:endi)
+        trial_ms0(cur_event)*newt(begi:endi)/tdes(begi:endi)
+
+    mdint(begi:endi,:) = one_th*(twopi*G*sc_mh)**two_th/&
+        tint(begi:endi,:)**five_th*dexp(betafrac*&
+        (dlog(md2int(begi:endi,:))-dlog(md1int(begi:endi,:))) + dlog(md1int(begi:endi,:)))*&
+        trial_ms0(cur_event)/time_corr
+
+    do i = begi, endi
+        do j = 2, intl
+            dm(i) = dm(i) + dexp(-tdes(i)/circular_time)*dexp(tint(i,j)-tint(i,j-1))mdint(i,j)
+            ! NOT FINISHED
+        enddo
+    enddo
 
     ! This bit of code would modify the fallback curve to include viscous
     ! effects. This changes the slope in dm/de to e^-2/3 if e < e_visc.

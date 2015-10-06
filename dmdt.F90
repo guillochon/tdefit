@@ -58,7 +58,8 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     real, intent(in), optional :: ades
 
     real :: betafrac, emin, emid, emax, epscor, edenom, orb_ener_correct, &
-            time_corr, relativity_corr, sc_mh, circular_time, tnot, peaktime
+            time_corr, relativity_corr, sc_mh, circular_time, tnot, peaktime, &
+            tmidint, dtint
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
     real, dimension(size(tdes),intl) :: md1int, md2int, mdint, tint, es1int, es2int
     !real, dimension(:), allocatable :: kernel, temp_mdot
@@ -219,22 +220,26 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     !enddo
     !kernel(1:(size(kernel)-1)/2) = kernel(size(kernel):(size(kernel)-1)/2+2:-1)
 
-    dm(begi:endi) = one_th*(twopi*G*sc_mh)**two_th/&
-        newt(begi:endi)**five_th*dexp(betafrac*&
-        (dlog(md2(begi:endi))-dlog(md1(begi:endi))) + dlog(md1(begi:endi)))*&
-        trial_ms0(cur_event)*newt(begi:endi)/tdes(begi:endi)
+    if (viscous_dmdt) then
+        mdint(begi:endi,:) = one_th*(twopi*G*sc_mh)**two_th/&
+            tint(begi:endi,:)**five_th*dexp(betafrac*&
+            (dlog(md2int(begi:endi,:))-dlog(md1int(begi:endi,:))) + dlog(md1int(begi:endi,:)))*&
+            trial_ms0(cur_event)/time_corr
 
-    mdint(begi:endi,:) = one_th*(twopi*G*sc_mh)**two_th/&
-        tint(begi:endi,:)**five_th*dexp(betafrac*&
-        (dlog(md2int(begi:endi,:))-dlog(md1int(begi:endi,:))) + dlog(md1int(begi:endi,:)))*&
-        trial_ms0(cur_event)/time_corr
-
-    do i = begi, endi
-        do j = 2, intl
-            !dm(i) = dm(i) + dexp(-tdes(i)/circular_time)*dexp(tint(i,j)-tint(i,j-1))mdint(i,j)
-            ! NOT FINISHED
+        do i = begi, endi
+            do j = 2, intl
+                tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))
+                dtint = tint(i,j)-tint(i,j-1)
+                dm(i) = dm(i) + dexp((tmid-tdes(i))/circular_time)*mdint(i,j)*dtint
+                dm(i) = dm(i)/circular_time
+            enddo
         enddo
-    enddo
+    else
+        dm(begi:endi) = one_th*(twopi*G*sc_mh)**two_th/&
+            newt(begi:endi)**five_th*dexp(betafrac*&
+            (dlog(md2(begi:endi))-dlog(md1(begi:endi))) + dlog(md1(begi:endi)))*&
+            trial_ms0(cur_event)*newt(begi:endi)/tdes(begi:endi)
+    endif
 
     ! This bit of code would modify the fallback curve to include viscous
     ! effects. This changes the slope in dm/de to e^-2/3 if e < e_visc.

@@ -6,6 +6,8 @@ Software includes a few pieces of code originally written by others:
 
 * [Quadpack](https://en.wikipedia.org/wiki/QUADPACK), for numerical integration, in the public domain.
 
+* Some functions from [PROB](https://people.sc.fsu.edu/~jburkardt/f_src/prob/prob.html), a Fortran90 probability library written by John Burkardt, LGPL.
+
 To install, clone the repository and then compile the code using make. Code only requires a Fortran compiler that supports Fortran 95, and has been tested with both ifort and gfortran.
 
 ```

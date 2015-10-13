@@ -1,10 +1,25 @@
-SUBROUTINE sort(arr)
+!This file is part of TDEFit.
+
+!TDEFit is free software: you can redistribute it and/or modify
+!it under the terms of the GNU General Public License as published by
+!the Free Software Foundation, either version 3 of the License, or
+!(at your option) any later version.
+!
+!TDEFit is distributed in the hope that it will be useful,
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
+!MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!GNU General Public License for more details.
+!
+!You should have received a copy of the GNU General Public License
+!along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
+
+subroutine sort(arr)
     USE tdefit_util, ONLY : swap,tdefit_error
-    real, DIMENSION(:), INTENT(INOUT) :: arr
-    integer, PARAMETER :: NN=15, NSTACK=50
+    real, dimension(:), intent(inout) :: arr
+    integer, parameter :: NN=15, NSTACK=50
     real :: a
     integer :: n,k,i,j,jstack,l,r
-    integer, DIMENSION(NSTACK) :: istack
+    integer, dimension(NSTACK) :: istack
     n=size(arr)
     jstack=0
     l=1
@@ -59,4 +74,4 @@ SUBROUTINE sort(arr)
             end if
         end if
     end do
-END SUBROUTINE sort
+end subroutine sort

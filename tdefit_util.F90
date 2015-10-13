@@ -1,284 +1,299 @@
-MODULE tdefit_util
+!This file is part of TDEFit.
+
+!TDEFit is free software: you can redistribute it and/or modify
+!it under the terms of the GNU General Public License as published by
+!the Free Software Foundation, either version 3 of the License, or
+!(at your option) any later version.
+!
+!TDEFit is distributed in the hope that it will be useful,
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
+!MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!GNU General Public License for more details.
+!
+!You should have received a copy of the GNU General Public License
+!along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
+
+module tdefit_util
     use constants
-    integer, PARAMETER :: NPAR_ARTH=16,NPAR2_ARTH=8
-    INTERFACE
-        SUBROUTINE least_sq(x,y,a,b,siga,sigb,chi2,q,sig)
-        real, DIMENSION(:), INTENT(IN) :: x,y
-        real, INTENT(OUT) :: a, b, siga, sigb, chi2, q
-        real, DIMENSION(:), OPTIONAL, INTENT(IN) :: sig
-        END SUBROUTINE least_sq
-    END INTERFACE
-    INTERFACE gamma_inc
-        FUNCTION gamma_inc(p, x)
+    integer, parameter :: NPAR_ARTH=16,NPAR2_ARTH=8
+    interface
+        subroutine least_sq(x,y,a,b,siga,sigb,chi2,q,sig)
+        real, dimension(:), intent(in) :: x,y
+        real, intent(out) :: a, b, siga, sigb, chi2, q
+        real, dimension(:), optional, intent(in) :: sig
+        end subroutine least_sq
+    end interface
+    interface gamma_inc
+        function gamma_inc(p, x)
             real ( kind = 8 ) p
             real ( kind = 8 ) x
             real ( kind = 8 ) gamma_inc
-        END FUNCTION gamma_inc
-    END INTERFACE
-    INTERFACE assert
-        MODULE PROCEDURE assert1,assert2,assert3,assert4,assert_v
-    END INTERFACE
-    INTERFACE assert_eq
-        MODULE PROCEDURE assert_eq2,assert_eq3,assert_eq4,assert_eqn
-    END INTERFACE
-    INTERFACE swap
-        MODULE PROCEDURE swap_i,swap_r,swap_rv,&
+        end function gamma_inc
+    end interface
+    interface assert
+        module procedure assert1,assert2,assert3,assert4,assert_v
+    end interface
+    interface assert_eq
+        module procedure assert_eq2,assert_eq3,assert_eq4,assert_eqn
+    end interface
+    interface swap
+        module procedure swap_i,swap_r,swap_rv,&
             swap_z,swap_zv,swap_zm, &
             masked_swap_rs,masked_swap_rv,masked_swap_rm
-    END INTERFACE
-    INTERFACE arth
-        MODULE PROCEDURE arth_r, arth_i
-    END INTERFACE
-    INTERFACE
-        SUBROUTINE amoeba_anneal(p,y,pb,yb,ftol,func,iter,temptr)
-        integer, INTENT(INOUT) :: iter
-        real, INTENT(INOUT) :: yb
-        real, INTENT(IN) :: ftol,temptr
-        real, DIMENSION(:), INTENT(INOUT) :: y,pb
-        real, DIMENSION(:,:), INTENT(INOUT) :: p
-        INTERFACE
-            FUNCTION func(x)
-            real, DIMENSION(:), INTENT(IN) :: x
+    end interface
+    interface arth
+        module procedure arth_r, arth_i
+    end interface
+    interface
+        subroutine amoeba_anneal(p,y,pb,yb,ftol,func,iter,temptr)
+        integer, intent(inout) :: iter
+        real, intent(inout) :: yb
+        real, intent(in) :: ftol,temptr
+        real, dimension(:), intent(inout) :: y,pb
+        real, dimension(:,:), intent(inout) :: p
+        interface
+            function func(x)
+            real, dimension(:), intent(in) :: x
             real :: func
-            END FUNCTION func
-        END INTERFACE
-        END SUBROUTINE amoeba_anneal
-    END INTERFACE
-    INTERFACE indexing
-        SUBROUTINE indexing_re(arr,index)
-        real, DIMENSION(:), INTENT(IN) :: arr
-        integer, DIMENSION(:), INTENT(OUT) :: index
-        END SUBROUTINE indexing_re
-        SUBROUTINE indexing_i4b(iarr,index)
-        integer, DIMENSION(:), INTENT(IN) :: iarr
-        integer, DIMENSION(:), INTENT(OUT) :: index
-        END SUBROUTINE indexing_i4b
-    END INTERFACE
-    INTERFACE
-        SUBROUTINE sort(arr)
-        real, DIMENSION(:), INTENT(INOUT) :: arr
-        END SUBROUTINE sort
-    END INTERFACE
-    INTERFACE sort2
-        SUBROUTINE sort2_rr(arr,slave)
-            real, DIMENSION(:), INTENT(INOUT) :: arr,slave
-        END SUBROUTINE sort2_rr
-        SUBROUTINE sort2_rc(arr,slave,length)
-            INTEGER, INTENT(IN) :: length
-            real, DIMENSION(:), INTENT(INOUT) :: arr
-            CHARACTER(len=length), DIMENSION(:), INTENT(INOUT) :: slave
-        END SUBROUTINE sort2_rc
-        SUBROUTINE sort2_ri(arr,slave)
-            real, DIMENSION(:), INTENT(INOUT) :: arr
-            integer, DIMENSION(:), INTENT(INOUT) :: slave
-        END SUBROUTINE sort2_ri
-        SUBROUTINE sort2_cr(arr,slave,length)
-            INTEGER, INTENT(IN) :: length
-            CHARACTER(len=length), DIMENSION(:), INTENT(INOUT) :: arr
-            real, DIMENSION(:), INTENT(INOUT) :: slave
-        END SUBROUTINE sort2_cr
-        SUBROUTINE sort2_ci(arr,slave,length)
-            INTEGER, INTENT(IN) :: length
-            CHARACTER(len=length), DIMENSION(:), INTENT(INOUT) :: arr
-            integer, DIMENSION(:), INTENT(INOUT) :: slave
-        END SUBROUTINE sort2_ci
-        SUBROUTINE sort2_cc(arr,slave)
-            CHARACTER, DIMENSION(:), INTENT(INOUT) :: arr, slave
-        END SUBROUTINE sort2_cc
-    END INTERFACE
+            end function func
+        end interface
+        end subroutine amoeba_anneal
+    end interface
+    interface indexing
+        subroutine indexing_re(arr,index)
+        real, dimension(:), intent(in) :: arr
+        integer, dimension(:), intent(out) :: index
+        end subroutine indexing_re
+        subroutine indexing_i4b(iarr,index)
+        integer, dimension(:), intent(in) :: iarr
+        integer, dimension(:), intent(out) :: index
+        end subroutine indexing_i4b
+    end interface
+    interface
+        subroutine sort(arr)
+        real, dimension(:), intent(inout) :: arr
+        end subroutine sort
+    end interface
+    interface sort2
+        subroutine sort2_rr(arr,slave)
+            real, dimension(:), intent(inout) :: arr,slave
+        end subroutine sort2_rr
+        subroutine sort2_rc(arr,slave,length)
+            integer, intent(in) :: length
+            real, dimension(:), intent(inout) :: arr
+            character(len=length), dimension(:), intent(inout) :: slave
+        end subroutine sort2_rc
+        subroutine sort2_ri(arr,slave)
+            real, dimension(:), intent(inout) :: arr
+            integer, dimension(:), intent(inout) :: slave
+        end subroutine sort2_ri
+        subroutine sort2_cr(arr,slave,length)
+            integer, intent(in) :: length
+            character(len=length), dimension(:), intent(inout) :: arr
+            real, dimension(:), intent(inout) :: slave
+        end subroutine sort2_cr
+        subroutine sort2_ci(arr,slave,length)
+            integer, intent(in) :: length
+            character(len=length), dimension(:), intent(inout) :: arr
+            integer, dimension(:), intent(inout) :: slave
+        end subroutine sort2_ci
+        subroutine sort2_cc(arr,slave)
+            character, dimension(:), intent(inout) :: arr, slave
+        end subroutine sort2_cc
+    end interface
 CONTAINS
     subroutine tdefit_error(string)
         character(len=*), intent(in) :: string
         print *, string
         call exit(0)
     end subroutine tdefit_error
-    SUBROUTINE assert1(n1,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    LOGICAL, INTENT(IN) :: n1
+    subroutine assert1(n1,string)
+    character(len=*), intent(in) :: string
+    logical, intent(in) :: n1
     if (.not. n1) then
         write (*,*) 'error: an assertion failed with this tag:', &
             string
-        STOP 'program terminated by assert1'
+        stop 'program terminated by assert1'
     end if
-    END SUBROUTINE assert1
+    end subroutine assert1
 
-    SUBROUTINE assert2(n1,n2,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    LOGICAL, INTENT(IN) :: n1,n2
+    subroutine assert2(n1,n2,string)
+    character(len=*), intent(in) :: string
+    logical, intent(in) :: n1,n2
     if (.not. (n1 .and. n2)) then
         write (*,*) 'error: an assertion failed with this tag:', &
             string
-        STOP 'program terminated by assert2'
+        stop 'program terminated by assert2'
     end if
-    END SUBROUTINE assert2
+    end subroutine assert2
 
-    SUBROUTINE assert3(n1,n2,n3,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    LOGICAL, INTENT(IN) :: n1,n2,n3
+    subroutine assert3(n1,n2,n3,string)
+    character(len=*), intent(in) :: string
+    logical, intent(in) :: n1,n2,n3
     if (.not. (n1 .and. n2 .and. n3)) then
         write (*,*) 'error: an assertion failed with this tag:', &
             string
-        STOP 'program terminated by assert3'
+        stop 'program terminated by assert3'
     end if
-    END SUBROUTINE assert3
+    end subroutine assert3
 
-    SUBROUTINE assert4(n1,n2,n3,n4,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    LOGICAL, INTENT(IN) :: n1,n2,n3,n4
+    subroutine assert4(n1,n2,n3,n4,string)
+    character(len=*), intent(in) :: string
+    logical, intent(in) :: n1,n2,n3,n4
     if (.not. (n1 .and. n2 .and. n3 .and. n4)) then
         write (*,*) 'error: an assertion failed with this tag:', &
             string
-        STOP 'program terminated by assert4'
+        stop 'program terminated by assert4'
     end if
-    END SUBROUTINE assert4
+    end subroutine assert4
 
-    SUBROUTINE assert_v(n,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    LOGICAL, DIMENSION(:), INTENT(IN) :: n
+    subroutine assert_v(n,string)
+    character(len=*), intent(in) :: string
+    logical, dimension(:), intent(in) :: n
     if (.not. all(n)) then
         write (*,*) 'error: an assertion failed with this tag:', &
             string
-        STOP 'program terminated by assert_v'
+        stop 'program terminated by assert_v'
     end if
-    END SUBROUTINE assert_v
+    end subroutine assert_v
 
-    FUNCTION assert_eq2(n1,n2,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    INTEGER, INTENT(IN) :: n1,n2
-    INTEGER :: assert_eq2
+    function assert_eq2(n1,n2,string)
+    character(len=*), intent(in) :: string
+    integer, intent(in) :: n1,n2
+    integer :: assert_eq2
     if (n1 == n2) then
         assert_eq2=n1
     else
         write (*,*) 'error: an assert_eq failed with this tag:', &
             string
-        STOP 'program terminated by assert_eq2'
+        stop 'program terminated by assert_eq2'
     end if
-    END FUNCTION assert_eq2
+    end function assert_eq2
 
-    FUNCTION assert_eq3(n1,n2,n3,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    INTEGER, INTENT(IN) :: n1,n2,n3
-    INTEGER :: assert_eq3
+    function assert_eq3(n1,n2,n3,string)
+    character(len=*), intent(in) :: string
+    integer, intent(in) :: n1,n2,n3
+    integer :: assert_eq3
     if (n1 == n2 .and. n2 == n3) then
         assert_eq3=n1
     else
         write (*,*) 'error: an assert_eq failed with this tag:', &
             string
-        STOP 'program terminated by assert_eq3'
+        stop 'program terminated by assert_eq3'
     end if
-    END FUNCTION assert_eq3
+    end function assert_eq3
 
-    FUNCTION assert_eq4(n1,n2,n3,n4,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    INTEGER, INTENT(IN) :: n1,n2,n3,n4
-    INTEGER :: assert_eq4
+    function assert_eq4(n1,n2,n3,n4,string)
+    character(len=*), intent(in) :: string
+    integer, intent(in) :: n1,n2,n3,n4
+    integer :: assert_eq4
     if (n1 == n2 .and. n2 == n3 .and. n3 == n4) then
         assert_eq4=n1
     else
         write (*,*) 'error: an assert_eq failed with this tag:', &
             string
-        STOP 'program terminated by assert_eq4'
+        stop 'program terminated by assert_eq4'
     end if
-    END FUNCTION assert_eq4
+    end function assert_eq4
 
-    FUNCTION assert_eqn(nn,string)
-    CHARACTER(LEN=*), INTENT(IN) :: string
-    INTEGER, DIMENSION(:), INTENT(IN) :: nn
-    INTEGER :: assert_eqn
+    function assert_eqn(nn,string)
+    character(len=*), intent(in) :: string
+    integer, dimension(:), intent(in) :: nn
+    integer :: assert_eqn
     if (all(nn(2:) == nn(1))) then
         assert_eqn=nn(1)
     else
         write (*,*) 'error: an assert_eq failed with this tag:', &
             string
-        STOP 'program terminated by assert_eqn'
+        stop 'program terminated by assert_eqn'
     end if
-    END FUNCTION assert_eqn
+    end function assert_eqn
 
-    SUBROUTINE swap_i(a,b)
-    integer, INTENT(INOUT) :: a,b
+    subroutine swap_i(a,b)
+    integer, intent(inout) :: a,b
     integer :: dum
     dum=a
     a=b
     b=dum
-    END SUBROUTINE swap_i
+    end subroutine swap_i
 
-    SUBROUTINE swap_r(a,b)
-    real, INTENT(INOUT) :: a,b
+    subroutine swap_r(a,b)
+    real, intent(inout) :: a,b
     real :: dum
     dum=a
     a=b
     b=dum
-    END SUBROUTINE swap_r
+    end subroutine swap_r
 
-    SUBROUTINE swap_rv(a,b)
-    real, DIMENSION(:), INTENT(INOUT) :: a,b
-    real, DIMENSION(SIZE(a)) :: dum
+    subroutine swap_rv(a,b)
+    real, dimension(:), intent(inout) :: a,b
+    real, dimension(SIZE(a)) :: dum
     dum=a
     a=b
     b=dum
-    END SUBROUTINE swap_rv
+    end subroutine swap_rv
 
-    SUBROUTINE swap_z(a,b)
-    complex, INTENT(INOUT) :: a,b
+    subroutine swap_z(a,b)
+    complex, intent(inout) :: a,b
     complex :: dum
     dum=a
     a=b
     b=dum
-    END SUBROUTINE swap_z
+    end subroutine swap_z
 
-    SUBROUTINE swap_zv(a,b)
-    complex, DIMENSION(:), INTENT(INOUT) :: a,b
-    complex, DIMENSION(SIZE(a)) :: dum
+    subroutine swap_zv(a,b)
+    complex, dimension(:), intent(inout) :: a,b
+    complex, dimension(SIZE(a)) :: dum
     dum=a
     a=b
     b=dum
-    END SUBROUTINE swap_zv
+    end subroutine swap_zv
 
-    SUBROUTINE swap_zm(a,b)
-    complex, DIMENSION(:,:), INTENT(INOUT) :: a,b
-    complex, DIMENSION(size(a,1),size(a,2)) :: dum
+    subroutine swap_zm(a,b)
+    complex, dimension(:,:), intent(inout) :: a,b
+    complex, dimension(size(a,1),size(a,2)) :: dum
     dum=a
     a=b
     b=dum
-    END SUBROUTINE swap_zm
+    end subroutine swap_zm
 
-    SUBROUTINE masked_swap_rs(a,b,mask)
-    real, INTENT(INOUT) :: a,b
-    logical, INTENT(IN) :: mask
+    subroutine masked_swap_rs(a,b,mask)
+    real, intent(inout) :: a,b
+    logical, intent(in) :: mask
     real :: swp
     if (mask) then
         swp=a
         a=b
         b=swp
     end if
-    END SUBROUTINE masked_swap_rs
+    end subroutine masked_swap_rs
 
-    SUBROUTINE masked_swap_rv(a,b,mask)
-    real, DIMENSION(:), INTENT(INOUT) :: a,b
-    logical, DIMENSION(:), INTENT(IN) :: mask
-    real, DIMENSION(size(a)) :: swp
+    subroutine masked_swap_rv(a,b,mask)
+    real, dimension(:), intent(inout) :: a,b
+    logical, dimension(:), intent(in) :: mask
+    real, dimension(size(a)) :: swp
     where (mask)
         swp=a
         a=b
         b=swp
     end where
-    END SUBROUTINE masked_swap_rv
+    end subroutine masked_swap_rv
 
-    SUBROUTINE masked_swap_rm(a,b,mask)
-    real, DIMENSION(:,:), INTENT(INOUT) :: a,b
-    logical, DIMENSION(:,:), INTENT(IN) :: mask
-    real, DIMENSION(size(a,1),size(a,2)) :: swp
+    subroutine masked_swap_rm(a,b,mask)
+    real, dimension(:,:), intent(inout) :: a,b
+    logical, dimension(:,:), intent(in) :: mask
+    real, dimension(size(a,1),size(a,2)) :: swp
     where (mask)
         swp=a
         a=b
         b=swp
     end where
-    END SUBROUTINE masked_swap_rm
+    end subroutine masked_swap_rm
 
-    FUNCTION arth_r(first,increment,n)
-    real, INTENT(IN) :: first,increment
-    integer, INTENT(IN) :: n
-    real, DIMENSION(n) :: arth_r
+    function arth_r(first,increment,n)
+    real, intent(in) :: first,increment
+    integer, intent(in) :: n
+    real, dimension(n) :: arth_r
     integer :: k,k2
     real :: temp
     if (n > 0) arth_r(1)=first
@@ -300,11 +315,11 @@ CONTAINS
             k=k2
         end do
     end if
-    END FUNCTION arth_r
+    end function arth_r
 
-    FUNCTION arth_i(first,increment,n)
-    integer, INTENT(IN) :: first,increment,n
-    integer, DIMENSION(n) :: arth_i
+    function arth_i(first,increment,n)
+    integer, intent(in) :: first,increment,n
+    integer, dimension(n) :: arth_i
     integer :: k,k2,temp
     if (n > 0) arth_i(1)=first
     if (n <= NPAR_ARTH) then
@@ -325,5 +340,5 @@ CONTAINS
             k=k2
         end do
     end if
-    END FUNCTION arth_i
-END MODULE tdefit_util
+    end function arth_i
+end module tdefit_util

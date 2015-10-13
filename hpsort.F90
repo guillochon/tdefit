@@ -1,3 +1,5 @@
+! Support file for redlaws, released under GPL license [http://adsabs.harvard.edu/abs/2004AJ....128.2144M]
+
 subroutine hpsort (x, n, indx, xasc)
       
     use tdefit_util, only: indexing

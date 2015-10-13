@@ -1,3 +1,18 @@
+!This file is part of TDEFit.
+
+!TDEFit is free software: you can redistribute it and/or modify
+!it under the terms of the GNU General Public License as published by
+!the Free Software Foundation, either version 3 of the License, or
+!(at your option) any later version.
+!
+!TDEFit is distributed in the hope that it will be useful,
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
+!MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!GNU General Public License for more details.
+!
+!You should have received a copy of the GNU General Public License
+!along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
+
 module tdefit_data
     use constants
     use types
@@ -79,7 +94,7 @@ module tdefit_data
     !real :: lfluxes_table(nbands,nTs,nzs,nnhs,nnhs)
     !real :: fluxes_table(nbands,nTs,nzs,nnhs,nnhs)
 
-!!!!! USER PARAMETERS.
+!!!!! USER parameterS.
     ! The following parameters are typically edited by the user before each run.
 
     ! Output/execution preferences.
@@ -215,9 +230,9 @@ module tdefit_data
     character*50, save, allocatable, dimension(:) :: var_names, all_var_names
     real, save, allocatable, dimension(:) :: min_search, max_search
 
-!!!!! END USER PARAMETERS
+!!!!! end USER parameterS
 
-!!!!! STATIC PARAMETERS.
+!!!!! STATIC parameterS.
     ! These parameters should rarely change from run to run.
 
     integer, parameter :: maxnrows = 100000
@@ -225,7 +240,7 @@ module tdefit_data
     integer, parameter :: filtintlen = 1000
     integer, parameter :: bisect_lim = 100
     real, parameter :: min_r_fac = 1.0 + 1.0d-3
-!!!!! END STATIC PARAMETERS.
+!!!!! end STATIC parameterS.
 
 !!!!! SHARED VARIABLES.
     ! These variables are used internally.
@@ -282,5 +297,5 @@ module tdefit_data
     ! Temporary storage parameters
     real, save, dimension(:), allocatable   :: flux_save
     character*100, save                                 :: warnings = ''
-!!!!! END SHARED VARIABLES
+!!!!! end SHARED VARIABLES
 end module

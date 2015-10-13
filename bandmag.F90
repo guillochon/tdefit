@@ -1,3 +1,18 @@
+!This file is part of TDEFit.
+
+!TDEFit is free software: you can redistribute it and/or modify
+!it under the terms of the GNU General Public License as published by
+!the Free Software Foundation, either version 3 of the License, or
+!(at your option) any later version.
+!
+!TDEFit is distributed in the hope that it will be useful,
+!but WITH(out) ANY WARRANTY; without even the implied warranty of
+!MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+!GNU General Public License for more details.
+!
+!You should have received a copy of the GNU General Public License
+!along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
+
 subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
     use tdefit_data
     use constants
@@ -70,7 +85,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
         dffb = fbs(j)
         dfmd = mdots(j)
 
-        !!!! NOTE: NEED TO PASS ENVELOPE TO THIS FUNCTION, INSTEAD OF RELYING ON GLOBALS
+        !!!! NOTE: NEED TO PASS ENVELOPE TO THIS function, INSTEAD OF RELYING ON GLOBALS
         dfenv = trial_menv(j,cur_event)
 
         if (dfmd .eq. lmaxmdot) then

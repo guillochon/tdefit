@@ -230,9 +230,9 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
         endif
 
         if (reprocess_model .ne. RM_NONE .and. .not. circ_phot) then
-            call dmdt([dftime], dm, .false., im2)
+            call dmdt([dftime], dm, .true., im2)
 
-            dfcovering = trial_opacity(cur_event)*max(0.d0,im2(1))*trial_ms(cur_event)/(eightpi*tworp**2*dlog(dfro/dfri))
+            dfcovering = trial_opacity(cur_event)*max(0.d0,im2(1))/(eightpi*tworp**2*dlog(dfro/dfri))
 
             ! If the light escape time is comparable to the time, exclude this
             ! solution, as it would delay the light curve.

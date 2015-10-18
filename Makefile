@@ -92,7 +92,7 @@ sort2.o: indexing.o
 disk_temp.o: constants.o tdefit_interface.o tdefit_data.o
 
 bandmag.o: tdefit_interface.o dffunc.o disk_temp.o bbflux.o \
-		   tdefit_data.o annulus_intercept.o integrate_df.o
+		   tdefit_data.o annulus_intercept.o integrate_df.o dmdt.o
 
 integrate_df.o: qxgs.o trapezoid.o quadpack.o
 

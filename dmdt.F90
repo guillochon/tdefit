@@ -54,7 +54,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     real, dimension(size(tdes)), intent(out), optional :: im, rhom
     real, dimension(:), allocatable :: temporary
     integer, intent(in), optional :: mode
-    integer, parameter :: intl = 100
+    integer, parameter :: intl = 20 ! Will change to user-editable parameter later.
     real, intent(in), optional :: ades
 
     real :: betafrac, emin, emid, emax, epscor, edenom, orb_ener_correct, &
@@ -144,7 +144,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
                         !*trial_fout(cur_event)**three_halfs
         endif
 
-        time_corr = time_corr * (1.d0 + circular_time/peaktime)
+        !time_corr = time_corr * (1.d0 + circular_time/peaktime)
     else
         circular_time = 0.d0
     endif
@@ -178,13 +178,13 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
 
     if (begi .gt. endi) return
 
-    if (viscous_dmdt) then
+    if (add_delay .and. viscous_dmdt) then
+        do j = 1, intl
+            tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-(j-1.)/(intl-1.)*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
+            es1int(begi:endi,j) = d_emin(bi) + (j-1.)/(intl-1.)*ratio(begi:endi)*(-d_emin(bi))
+            es2int(begi:endi,j) = d_emin(ei) + (j-1.)/(intl-1.)*ratio(begi:endi)*(-d_emin(ei))
+        enddo
         do i = begi, endi
-            do j = 1, intl
-                tint(i,j) = (pi_G*isqrt2*sc_mh)/(-(j-1.)/(intl-1.)*ratio(i)*edenom - emin - orb_ener_correct)**1.5d0
-                es1int(i,j) = d_emin(bi) + (j-1.)/(intl-1.)*ratio(i)*(-d_emin(bi))
-                es2int(i,j) = d_emin(ei) + (j-1.)/(intl-1.)*ratio(i)*(-d_emin(ei))
-            enddo
             call interp_flash_output(DDAT_ARR, bi, begi, es1int(i,:), md1int(i,:))
             call interp_flash_output(DDAT_ARR, ei, begi, es2int(i,:), md2int(i,:))
         enddo
@@ -208,7 +208,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
         call interp_flash_output(RHODDAT_ARR, ei, begi, es(begi:endi), rhomd2(begi:endi))
     endif
 
-    if (viscous_dmdt) then
+    if (add_delay .and. viscous_dmdt) then
         mdint(begi:endi,:) = one_th*(twopi*G*sc_mh)**two_th/&
             tint(begi:endi,:)**five_th*dexp(betafrac*&
             (dlog(md2int(begi:endi,:))-dlog(md1int(begi:endi,:))) + dlog(md1int(begi:endi,:)))*&
@@ -219,9 +219,9 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
                 tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))
                 dtint = tint(i,j)-tint(i,j-1)
                 dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*mdint(i,j)*dtint
-                dm(i) = dm(i)/circular_time
             enddo
         enddo
+        dm = dm/circular_time
     else
         dm(begi:endi) = one_th*(twopi*G*sc_mh)**two_th/&
             newt(begi:endi)**five_th*dexp(betafrac*&

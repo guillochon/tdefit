@@ -670,7 +670,7 @@ subroutine init
         do j = 2, ddat_ncols(i)
             iddat(i,2,j) = iddat(i,2,j-1) + ddat(i,2,j)!*dsqrt(dabs(ddat(i,1,j)))
         enddo
-        iddat(i,2,1:ddat_ncols(i)) = iddat(i,2,1:ddat_ncols(i))/maxval(iddat(i,2,1:ddat_ncols(i)))
+        !iddat(i,2,1:ddat_ncols(i)) = iddat(i,2,1:ddat_ncols(i))/maxval(iddat(i,2,1:ddat_ncols(i)))
 
         maxtauloc = maxloc(ddat(i,2,1:ddat_ncols(i))*dsqrt(dabs(ddat(i,1,1:ddat_ncols(i)))), 1, &
                            mask = ddat(i,1,1:ddat_ncols(i)) .lt. 0.d0)

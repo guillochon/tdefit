@@ -33,8 +33,6 @@ else
 #	FCFLAGS = -u -r8 -i4 -O0 -g -traceback -check all -fpp -warn all #-mieee-fp
 endif
 
-NR=amoeba_anneal.o sort.o sort2.o indexing.o
-
 SRCS=$(patsubst %.F90, %.o, $(wildcard *.F90))
 
 NOFPE=amoeba_anneal.o
@@ -87,7 +85,11 @@ ftoABmag.o: tdefit_interface.o tdefit_data.o cosmology.o
 
 dmdt.o: tdefit_interface.o tdefit_data.o
 
+sort.o: tdefit_util.o
+
 sort2.o: indexing.o
+
+indexing.o: tdefit_util.o
 
 disk_temp.o: constants.o tdefit_interface.o tdefit_data.o
 
@@ -95,6 +97,8 @@ bandmag.o: tdefit_interface.o dffunc.o disk_temp.o bbflux.o \
 		   tdefit_data.o annulus_intercept.o integrate_df.o dmdt.o
 
 integrate_df.o: qxgs.o trapezoid.o quadpack.o
+
+amoeba_anneal.o: tdefit_util.o
 
 tdefit.o: init.o radius.o magdev.o dmdt.o bandmag.o sort2.o set_trial_vars.o \
           init_search_grid.o tdefit_data.o init_search_grid.o load_user_vars.o load_event.o \
@@ -134,6 +138,8 @@ alambdaz.o: alambda.o tdefit_interface.o tdefit_data.o
 alambda.o: constants.o tdefit_interface.o tdefit_data.o bisect.o redlaws.o
 
 redlaws.o: hpsort.o splt.o splt_p.o constants.o tdefit_data.o
+
+hpsort.o: tdefit_util.o
 
 acor.o: tdefit_data.o
 

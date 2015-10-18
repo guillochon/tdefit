@@ -98,7 +98,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     ! For debugging
     !print *, 'warning betafrac set to 0.d0 for debugging'
     !betafrac = 0.0d0
-    
+
     ! emin should be set to the same small number for all runs so light curve can extend to infinite time.
     emin = (betafrac*(d_emin(ei) - d_emin(bi)) + d_emin(bi))
     emid = (betafrac*(d_emid(ei) - d_emid(bi)) + d_emid(bi))
@@ -131,11 +131,6 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     time_corr = dsqrt(trial_mh(cur_event)/sc_mh)/trial_ms0(cur_event)*trial_rs0(cur_event)**three_halfs/relativity_corr**three_halfs
 
     first_accretion_time = pi_G*isqrt2*sc_mh/(-emin - orb_ener_correct)**three_halfs
-        
-    ! Based on Ulmer 1999
-    !first_accretion_time = max(first_accretion_time,&
-    !    pi_G*isqrt2*sc_mh*rsun**three_halfs/&
-    !    (G*(sc_mh*msun**2)**one_th*trial_beta(cur_event)**2 - rsun*orb_ener_correct)**three_halfs)
 
     if (add_delay .and. viscous_dmdt) then
         peaktime = ((betafrac*(maxdmdttime(ei) - maxdmdttime(bi)) + maxdmdttime(bi)))*&
@@ -186,7 +181,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     if (viscous_dmdt) then
         do i = begi, endi
             do j = 1, intl
-                tint(i,j) = (pi_G*isqrt2*sc_mh)/(-((j-1.)/(intl-1.)*ratio(i)*edenom - emin - orb_ener_correct))**1.5d0
+                tint(i,j) = (pi_G*isqrt2*sc_mh)/(-(j-1.)/(intl-1.)*ratio(i)*edenom - emin - orb_ener_correct)**1.5d0
                 es1int(i,j) = d_emin(bi) + (j-1.)/(intl-1.)*ratio(i)*(-d_emin(bi))
                 es2int(i,j) = d_emin(ei) + (j-1.)/(intl-1.)*ratio(i)*(-d_emin(ei))
             enddo
@@ -213,13 +208,6 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
         call interp_flash_output(RHODDAT_ARR, ei, begi, es(begi:endi), rhomd2(begi:endi))
     endif
 
-    !local_kerw = ceiling(final_kerw*(endi-begi+1))
-    !allocate(kernel(6*int(local_kerw)+1))
-    !do i = (size(kernel)-1)/2 + 1, size(kernel)
-    !    kernel(i) = dexp(-((i - ((size(kernel)-1)/2 + 1))**2.d0/2.d0/local_kerw**2.d0))
-    !enddo
-    !kernel(1:(size(kernel)-1)/2) = kernel(size(kernel):(size(kernel)-1)/2+2:-1)
-
     if (viscous_dmdt) then
         mdint(begi:endi,:) = one_th*(twopi*G*sc_mh)**two_th/&
             tint(begi:endi,:)**five_th*dexp(betafrac*&
@@ -230,7 +218,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             do j = 2, intl
                 tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))
                 dtint = tint(i,j)-tint(i,j-1)
-                dm(i) = dm(i) + dexp((tmid-tdes(i))/circular_time)*mdint(i,j)*dtint
+                dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*mdint(i,j)*dtint
                 dm(i) = dm(i)/circular_time
             enddo
         enddo

@@ -156,12 +156,12 @@ module tdefit_data
     real, parameter :: dele_dmtot = 1.0d-8 !Record the change in energy when this much mass has left the box.
                                             !The change in energy starts to be unreliable when mass leaves the box.
     real, save :: kerw        !In number of bins
-    !real, parameter :: final_kerw = 0.01d0 !Fraction of total light curve.
     real, save :: roche_cut, roche_range, early_range
     real, parameter :: early_cut_const = 2.0d0 ! Number of orders of magnitude to cutoff at early times from dm/de.
     real, parameter :: min_dm = 5.d24
     real, parameter :: min_abs_e = 11.d0 ! Minimum log value in E before smoothing
     integer, parameter :: n_early_bins = 2000
+    integer, parameter :: dmdt_viscl = 50 ! When integrating for viscous model, use this many bins.
     
     ! Likelihood function options
     integer, parameter :: hard_penalties = 2 ! 0: Soft penalties, 1: Gradual hardening while annealing, 2: Always hard
@@ -246,7 +246,7 @@ module tdefit_data
     ! These variables are used internally.
 
     ! Variables for reading in simulation data
-    character*100, save                                           :: exec_path, output_path, input_path, event_path, binary_path
+    character*100, save                                :: exec_path, output_path, input_path, event_path, binary_path
     real, save                                         :: min_sim_beta, max_sim_beta !Are set to min/max sim beta in init.
     real, save                                         :: bhdisk_fcor, eps_edd, max_aspin, avconst, mctemp
     real, save                                         :: first_accretion_time, full_reflect_r, orb_period
@@ -268,7 +268,7 @@ module tdefit_data
     real, save, dimension(:,:), allocatable            :: mu_tot, mu_bnd, v1, v2, rad, vel, semimaj
     real, save, dimension(:,:,:), target, allocatable  :: mdat, odat, ddat, iddat, rhoddat, filtint
     real, save, dimension(:,:,:), allocatable          :: vec1, vec2, bndcom, mpolecom, totcom, barycenter
-    integer, dimension(:), save, allocatable                      :: mdat_nrows, odat_nrows, ddat_ncols
+    integer, dimension(:), save, allocatable           :: mdat_nrows, odat_nrows, ddat_ncols
 
     ! Annealing variables
     integer, save, allocatable, dimension(:)            :: model_index

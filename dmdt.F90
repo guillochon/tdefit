@@ -42,7 +42,8 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
                     trial_mh, trial_gmh, trial_r_ibco, d_emin, d_emid, d_emax, &
                     trial_rp, trial_beta, edat, ddat_ncols, trial_alphhr, orb_period, &
                     model_beta_destroy, trial_model, viscous_dmdt, ddat, &
-                    cur_event, trial_fout, trial_viscous_time, maxdmdttime
+                    cur_event, trial_fout, trial_viscous_time, maxdmdttime, &
+                    dmdt_viscl
     use tdefit_interface, only: interp_flash_output, get_sim_index
 
 
@@ -54,14 +55,13 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     real, dimension(size(tdes)), intent(out), optional :: im, rhom
     real, dimension(:), allocatable :: temporary
     integer, intent(in), optional :: mode
-    integer, parameter :: intl = 20 ! Will change to user-editable parameter later.
     real, intent(in), optional :: ades
 
     real :: betafrac, emin, emid, emax, epscor, edenom, orb_ener_correct, &
             time_corr, relativity_corr, sc_mh, circular_time, tnot, peaktime, &
             tmidint, dtint
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
-    real, dimension(size(tdes),intl) :: md1int, md2int, mdint, tint, es1int, es2int
+    real, dimension(size(tdes),dmdt_viscl) :: md1int, md2int, mdint, tint, es1int, es2int
     !real, dimension(:), allocatable :: kernel, temp_mdot
     integer :: i, j, z, bi, ei, begi, endi, cbegi
 
@@ -179,10 +179,10 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     if (begi .gt. endi) return
 
     if (add_delay .and. viscous_dmdt) then
-        do j = 1, intl
-            tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-(j-1.)/(intl-1.)*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
-            es1int(begi:endi,j) = d_emin(bi) + (j-1.)/(intl-1.)*ratio(begi:endi)*(-d_emin(bi))
-            es2int(begi:endi,j) = d_emin(ei) + (j-1.)/(intl-1.)*ratio(begi:endi)*(-d_emin(ei))
+        do j = 1, dmdt_viscl
+            tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-(j-1.)/(dmdt_viscl-1.)*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
+            es1int(begi:endi,j) = d_emin(bi) + (j-1.)/(dmdt_viscl-1.)*ratio(begi:endi)*(-d_emin(bi))
+            es2int(begi:endi,j) = d_emin(ei) + (j-1.)/(dmdt_viscl-1.)*ratio(begi:endi)*(-d_emin(ei))
         enddo
         do i = begi, endi
             call interp_flash_output(DDAT_ARR, bi, begi, es1int(i,:), md1int(i,:))
@@ -215,7 +215,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             trial_ms0(cur_event)/time_corr
 
         do i = begi, endi
-            do j = 2, intl
+            do j = 2, dmdt_viscl
                 tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))
                 dtint = tint(i,j)-tint(i,j-1)
                 dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*mdint(i,j)*dtint

@@ -57,8 +57,6 @@ tdefit_data.o: constants.o types.o
 
 tdefit_interface.o: tdefit_data.o qxgs.o
 
-$(NR): nr.o
-
 likelihood.o: tdefit_interface.o tdefit_data.o dmdt.o bandmag.o set_event.o constants.o
 
 load_user_vars.o: tdefit_interface.o tdefit_data.o
@@ -70,8 +68,6 @@ least_sq.o: tdefit_util.o gamma_inc.o
 functions.o: constants.o tdefit_interface.o tdefit_data.o
 
 qxgs.o: constants_nswc.o
-
-nr.o: tdefit_util.o
 
 tdefit_util.o: constants.o
 
@@ -87,8 +83,6 @@ set_var.o: constants.o tdefit_data.o type_conversion.o tdefit_interface.o
 
 get_var.o: constants.o tdefit_data.o
 
-tdefit_interface.o: nr.o
-
 ftoABmag.o: tdefit_interface.o tdefit_data.o cosmology.o
 
 dmdt.o: tdefit_interface.o tdefit_data.o
@@ -97,10 +91,10 @@ sort2.o: indexing.o
 
 disk_temp.o: constants.o tdefit_interface.o tdefit_data.o
 
-bandmag.o: tdefit_interface.o dffunc.o disk_temp.o nr.o bbflux.o \
+bandmag.o: tdefit_interface.o dffunc.o disk_temp.o bbflux.o \
 		   tdefit_data.o annulus_intercept.o integrate_df.o
 
-integrate_df.o: qxgs.o nr.o trapezoid.o quadpack.o
+integrate_df.o: qxgs.o trapezoid.o quadpack.o
 
 tdefit.o: init.o radius.o magdev.o dmdt.o bandmag.o sort2.o set_trial_vars.o \
           init_search_grid.o tdefit_data.o init_search_grid.o load_user_vars.o load_event.o \
@@ -115,7 +109,7 @@ print_trial_vars.o: tdefit_data.o get_var.o tdefit_interface.o
 
 ang_frac.o: tdefit_data.o constants.o tdefit_interface.o
 
-load_event.o: constants.o tdefit_data.o tdefit_interface.o nr.o
+load_event.o: constants.o tdefit_data.o tdefit_interface.o
 
 magdev.o: bandmag.o set_trial_vars.o tdefit_data.o set_event.o
 
@@ -140,8 +134,6 @@ alambdaz.o: alambda.o tdefit_interface.o tdefit_data.o
 alambda.o: constants.o tdefit_interface.o tdefit_data.o bisect.o redlaws.o
 
 redlaws.o: hpsort.o splt.o splt_p.o constants.o tdefit_data.o
-
-hpsort.o: nr.o
 
 acor.o: tdefit_data.o
 

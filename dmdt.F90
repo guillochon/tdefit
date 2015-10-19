@@ -180,9 +180,9 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
 
     if (add_delay .and. viscous_dmdt) then
         do j = 1, dmdt_viscl
-            tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-(j-1.)/(dmdt_viscl-1.)*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
-            es1int(begi:endi,j) = d_emin(bi) + (j-1.)/(dmdt_viscl-1.)*ratio(begi:endi)*(-d_emin(bi))
-            es2int(begi:endi,j) = d_emin(ei) + (j-1.)/(dmdt_viscl-1.)*ratio(begi:endi)*(-d_emin(ei))
+            tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-(dble(j)-1.)/(dble(dmdt_viscl)-1.)*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
+            es1int(begi:endi,j) = d_emin(bi) + (dble(j)-1.)/(dble(dmdt_viscl)-1.)*ratio(begi:endi)*(-d_emin(bi))
+            es2int(begi:endi,j) = d_emin(ei) + (dble(j)-1.)/(dble(dmdt_viscl)-1.)*ratio(begi:endi)*(-d_emin(ei))
         enddo
         do i = begi, endi
             call interp_flash_output(DDAT_ARR, bi, begi, es1int(i,:), md1int(i,:))
@@ -216,8 +216,8 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
 
         do i = begi, endi
             do j = 2, dmdt_viscl
-                tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))
-                dtint = tint(i,j)-tint(i,j-1)
+                tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))*time_corr
+                dtint = (tint(i,j)-tint(i,j-1))*time_corr
                 dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*&
                         0.5d0*(mdint(i,j)+mdint(i,j-1))*dtint
             enddo

@@ -218,7 +218,8 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             do j = 2, dmdt_viscl
                 tmidint = 0.5d0*(tint(i,j)+tint(i,j-1))
                 dtint = tint(i,j)-tint(i,j-1)
-                dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*mdint(i,j)*dtint
+                dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*&
+                        0.5d0*(mdint(i,j)+mdint(i,j-1))*dtint
             enddo
         enddo
         dm = dm/circular_time
@@ -238,12 +239,8 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     if (present(im)) then
         ! Normalized to one, not actual integrated density.
         ! calculation in future.
-        if (add_delay .and. viscous_dmdt) then
-            im(begi:endi) = dm(begi:endi)*circular_time
-        else
-            im(begi:endi) = dexp(betafrac*(dlog(imd2(begi:endi))-dlog(imd1(begi:endi))) + &
-                            dlog(imd1(begi:endi)))
-        endif
+        im(begi:endi) = dexp(betafrac*(dlog(imd2(begi:endi))-dlog(imd1(begi:endi))) + &
+                        dlog(imd1(begi:endi)))
     endif
     if (present(rhom)) then
         ! Normalized to one, not actual density.

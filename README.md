@@ -19,4 +19,8 @@ hg clone ssh://hg@bitbucket.org/Guillochon/tdefit
 make -j tdefit
 ```
 
-Code requires two sets of data as inputs that are not included in this repository: A directory of event data and a directory of dm/dt data. Both are available from astrocrash.net (details forthcoming).
+Code requires two sets of data as inputs that are not included in this repository: A directory of event data and a directory of dm/dt data. Both are available from my personal website astrocrash.net:
+
+* dmdts: [http://astrocrash.net/files/tdefit-dmdts.tar.gz](http://astrocrash.net/files/tdefit-dmdts.tar.gz).
+
+* events: Download link coming soon.

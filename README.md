@@ -17,6 +17,8 @@ wget http://astrocrash.net/files/tdefit-events.tar.gz
 tar -xzf tdefit-events.tar.gz
 ```
 
+**Note: At the moment the events data is not available, but will be soon.**
+
 ##Credits
 
 Software includes a few pieces of code originally written by others:

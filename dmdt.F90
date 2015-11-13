@@ -59,7 +59,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
 
     real :: betafrac, emin, emid, emax, epscor, edenom, orb_ener_correct, &
             time_corr, relativity_corr, sc_mh, circular_time, tnot, peaktime, &
-            tmidint, dtint
+            tmidint, dtint, mint
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
     real, dimension(size(tdes),dmdt_viscl) :: md1int, md2int, mdint, tint, es1int, es2int
     real, dimension(dmdt_viscl) :: jrat, intratio
@@ -184,7 +184,8 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             jrat(j) = (dble(j)-1.)/(dble(dmdt_viscl)-1.)
         enddo
         do i = begi, endi
-            tint(i,:) = newt(i) - jrat(dmdt_viscl:1:-1)*min(newt(i),10.d0*circular_time/time_corr)
+            mint = 1.000001*(pi_G*isqrt2*sc_mh)/(-emin - orb_ener_correct)**1.5d0
+            tint(i,:) = newt(i) - jrat(dmdt_viscl:1:-1)*min(newt(i)-mint,10.d0*circular_time/time_corr)
             intratio = (-((pi_G*isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom
             es1int(i,:) = d_emin(bi) + intratio*(-d_emin(bi))
             es2int(i,:) = d_emin(ei) + intratio*(-d_emin(ei))

@@ -43,7 +43,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
                     trial_rp, trial_beta, edat, ddat_ncols, trial_alphhr, orb_period, &
                     model_beta_destroy, trial_model, viscous_dmdt, ddat, &
                     cur_event, trial_fout, trial_viscous_time, maxdmdttime, &
-                    dmdt_viscl
+                    dmdt_viscl, dmdt_visct
     use tdefit_interface, only: interp_flash_output, get_sim_index
 
 
@@ -185,10 +185,10 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
         enddo
         do i = begi, endi
             mint = 1.000001*(pi_G*isqrt2*sc_mh)/(-emin - orb_ener_correct)**1.5d0
-            tint(i,:) = newt(i) - jrat(dmdt_viscl:1:-1)*min(newt(i)-mint,10.d0*circular_time/time_corr)
-            intratio = (-((pi_G*isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom
-            es1int(i,:) = d_emin(bi) + intratio*(-d_emin(bi))
-            es2int(i,:) = d_emin(ei) + intratio*(-d_emin(ei))
+            tint(i,:) = newt(i) - jrat(dmdt_viscl:1:-1)*min(newt(i)-mint,dmdt_visct*circular_time/time_corr)
+            intratio = 1.d0 - (-((pi_G*isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom
+            es1int(i,:) = d_emin(bi)*intratio
+            es2int(i,:) = d_emin(ei)*intratio
         enddo
         !do j = 1, dmdt_viscl
         !    jrat = (dble(j)-1.)/(dble(dmdt_viscl)-1.)

@@ -1,0 +1,14 @@
+syntax:glob
+
+*.o
+*.mod
+*.bin
+*.mat
+*.swp
+*.png
+.DS_Store
+*__genmod*
+tdefit
+dmdts
+events
+version.fpp

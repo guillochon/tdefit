@@ -62,6 +62,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             tmidint, dtint
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
     real, dimension(size(tdes),dmdt_viscl) :: md1int, md2int, mdint, tint, es1int, es2int
+    real, dimension(dmdt_viscl) :: jrat
     !real, dimension(:), allocatable :: kernel, temp_mdot
     integer :: i, j, z, bi, ei, begi, endi, cbegi
 
@@ -180,10 +181,20 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
 
     if (add_delay .and. viscous_dmdt) then
         do j = 1, dmdt_viscl
-            tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-(dble(j)-1.)/(dble(dmdt_viscl)-1.)*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
-            es1int(begi:endi,j) = d_emin(bi) + (dble(j)-1.)/(dble(dmdt_viscl)-1.)*ratio(begi:endi)*(-d_emin(bi))
-            es2int(begi:endi,j) = d_emin(ei) + (dble(j)-1.)/(dble(dmdt_viscl)-1.)*ratio(begi:endi)*(-d_emin(ei))
+            jrat(j) = (dble(j)-1.)/(dble(dmdt_viscl)-1.)
         enddo
+        do i = begi, endi
+            tint(i,:) = newt(i) - jrat(dmdt_viscl:1:-1)*min(newt(i),10.d0*circular_time/time_corr)
+            intratio = (-((pi_G*isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom
+            es1int(i,:) = d_emin(bi) + intratio*(-d_emin(bi))
+            es2int(i,:) = d_emin(ei) + intratio*(-d_emin(ei))
+        enddo
+        !do j = 1, dmdt_viscl
+        !    jrat = (dble(j)-1.)/(dble(dmdt_viscl)-1.)
+        !    tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-jrat*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
+        !    es1int(begi:endi,j) = d_emin(bi) + jrat*ratio(begi:endi)*(-d_emin(bi))
+        !    es2int(begi:endi,j) = d_emin(ei) + jrat*ratio(begi:endi)*(-d_emin(ei))
+        !enddo
         do i = begi, endi
             call interp_flash_output(DDAT_ARR, bi, begi, es1int(i,:), md1int(i,:))
             call interp_flash_output(DDAT_ARR, ei, begi, es2int(i,:), md2int(i,:))

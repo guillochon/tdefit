@@ -1,4 +1,25 @@
-TDEFit -- Originally coded by James Guillochon (http://astrocrash.net)
+#TDEFit - Software for fitting tidal disruption event light curves
+Originally coded by James Guillochon (http://astrocrash.net).
+
+##Installation instructions
+
+To install, clone the repository and then compile the code using make. Code only requires a Fortran compiler that supports Fortran 95, and has been tested with both ifort and gfortran. Code requires two sets of data as inputs that are not included in this repository because of their size or proprietary nature: A directory of event data and a directory of dm/dt data.
+
+```
+#!csh
+
+hg clone ssh://hg@bitbucket.org/Guillochon/tdefit
+cd tdefit
+make -j tdefit
+wget http://astrocrash.net/files/tdefit-dmdts.tar.gz
+tar -xzf tdefit-dmdts.tar.gz
+wget http://astrocrash.net/files/tdefit-events.tar.gz
+tar -xzf tdefit-events.tar.gz
+```
+
+**Note: At the moment the events data is not available, but will be soon.**
+
+##Credits
 
 Software includes a few pieces of code originally written by others:
 
@@ -9,14 +30,3 @@ Software includes a few pieces of code originally written by others:
 * Some functions from [PROB](https://people.sc.fsu.edu/~jburkardt/f_src/prob/prob.html), a Fortran90 probability library written by John Burkardt, LGPL.
 
 * [qxgs](http://jblevins.org/mirror/amiller/), a one-dimensional integrator written by Alan Miller, public domain.
-
-To install, clone the repository and then compile the code using make. Code only requires a Fortran compiler that supports Fortran 95, and has been tested with both ifort and gfortran.
-
-```
-#!csh
-
-hg clone ssh://hg@bitbucket.org/Guillochon/tdefit
-make -j tdefit
-```
-
-Code requires two sets of data as inputs that are not included in this repository: A directory of event data and a directory of dm/dt data. Both are available from astrocrash.net (details forthcoming).

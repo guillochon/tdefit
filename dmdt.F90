@@ -43,7 +43,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
                     trial_rp, trial_beta, edat, ddat_ncols, trial_alphhr, orb_period, &
                     model_beta_destroy, trial_model, viscous_dmdt, ddat, &
                     cur_event, trial_fout, trial_viscous_time, maxdmdttime, &
-                    dmdt_viscl, dmdt_visct
+                    dmdt_viscl, dmdt_visct, dmdt_jrat
     use tdefit_interface, only: interp_flash_output, get_sim_index
 
 
@@ -62,7 +62,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             tmidint, dtint, mint
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
     real, dimension(size(tdes),dmdt_viscl) :: md1int, md2int, mdint, tint, es1int, es2int
-    real, dimension(dmdt_viscl) :: jrat, intratio
+    real, dimension(dmdt_viscl) :: intratio
     !real, dimension(:), allocatable :: kernel, temp_mdot
     integer :: i, j, z, bi, ei, begi, endi, cbegi
 
@@ -116,7 +116,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     ! Use unscaled time for accessing dm/de table.
 
     ! The way trial_ecor(cur_event) is put in here is probably not correct!!!!!!
-    !newt = pi_G*sc_mh*isqrt2/((sqrt2*tdes/(pi_G*sc_mh))**(-two_th) - &
+    !newt = pi_G_isqrt2*sc_mh/((sqrt2*tdes/(pi_G*sc_mh))**(-two_th) - &
     !    G*trial_mh(cur_event)/trial_rp(cur_event)**2*rsun*trial_ecor(cur_event))**three_halfs
     !newt = tdes
 
@@ -124,14 +124,14 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     orb_ener_correct = -trial_ecor(cur_event)*G*trial_beta(cur_event)**2*sc_mh/(rsun*(sc_mh*imsun)**two_th)
 
     if (trial_ecor(cur_event) .gt. 0.d0 .and. trial_beta(cur_event) .lt. model_beta_destroy(trial_model(cur_event)+1)) then
-        orb_period = pi_G*isqrt2/dabs(orb_ener_correct)**three_halfs*sc_mh
+        orb_period = pi_G_isqrt2/dabs(orb_ener_correct)**three_halfs*sc_mh
     else
         orb_period = huge(1.d0)
     endif
 
     time_corr = dsqrt(trial_mh(cur_event)/sc_mh)/trial_ms0(cur_event)*trial_rs0(cur_event)**three_halfs/relativity_corr**three_halfs
 
-    first_accretion_time = pi_G*isqrt2*sc_mh/(-emin - orb_ener_correct)**three_halfs
+    first_accretion_time = pi_G_isqrt2*sc_mh/(-emin - orb_ener_correct)**three_halfs
 
     if (add_delay .and. viscous_dmdt) then
         peaktime = ((betafrac*(maxdmdttime(ei) - maxdmdttime(bi)) + maxdmdttime(bi)))*&
@@ -164,7 +164,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             cycle
         endif
 
-        ratio(i) = (-((pi_G*isqrt2*sc_mh/newt(i))**two_th) - emin - orb_ener_correct)/edenom
+        ratio(i) = (-((pi_G_isqrt2*sc_mh/newt(i))**two_th) - emin - orb_ener_correct)/edenom
 
         if (ratio(i) .le. 0.d0) then
             begi = i+1
@@ -180,19 +180,16 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     if (begi .gt. endi) return
 
     if (add_delay .and. viscous_dmdt) then
-        do j = 1, dmdt_viscl
-            jrat(j) = (dble(j)-1.)/(dble(dmdt_viscl)-1.)
-        enddo
+        mint = (pi_G_isqrt2*sc_mh)/(-emin - orb_ener_correct)**1.5d0
         do i = begi, endi
-            mint = 1.000001*(pi_G*isqrt2*sc_mh)/(-emin - orb_ener_correct)**1.5d0
-            tint(i,:) = newt(i) - jrat(dmdt_viscl:1:-1)*min(newt(i)-mint,dmdt_visct*circular_time/time_corr)
-            intratio = 1.d0 - (-((pi_G*isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom
+            tint(i,:) = newt(i) - dmdt_jrat*min(newt(i)-mint,dmdt_visct*circular_time/time_corr)
+            intratio = min(max(1.d0 - (-((pi_G_isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom, 0.d0), 1.d0)
             es1int(i,:) = d_emin(bi)*intratio
             es2int(i,:) = d_emin(ei)*intratio
         enddo
         !do j = 1, dmdt_viscl
         !    jrat = (dble(j)-1.)/(dble(dmdt_viscl)-1.)
-        !    tint(begi:endi,j) = (pi_G*isqrt2*sc_mh)/(-jrat*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
+        !    tint(begi:endi,j) = (pi_G_isqrt2*sc_mh)/(-jrat*ratio(begi:endi)*edenom - emin - orb_ener_correct)**1.5d0
         !    es1int(begi:endi,j) = d_emin(bi) + jrat*ratio(begi:endi)*(-d_emin(bi))
         !    es2int(begi:endi,j) = d_emin(ei) + jrat*ratio(begi:endi)*(-d_emin(ei))
         !enddo

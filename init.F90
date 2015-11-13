@@ -109,6 +109,10 @@ subroutine init
     allocate(d_emid(1:nruns))
     allocate(d_emax(1:nruns))
 
+    do i = 1, dmdt_viscl
+        dmdt_jrat(i) = 1.d0 - ((dble(i)-1.)/(dble(dmdt_viscl)-1.))**2
+    enddo
+
     sim_dele = 0.d0
     mdat_nrows = 0
     odat_nrows = 0

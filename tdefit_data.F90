@@ -161,8 +161,9 @@ module tdefit_data
     real, parameter :: min_dm = 5.d24
     real, parameter :: min_abs_e = 11.d0 ! Minimum log value in E before smoothing
     integer, parameter :: n_early_bins = 2000
-    integer, parameter :: dmdt_viscl = 100 ! When integrating for viscous model, use this many bins.
+    integer, parameter :: dmdt_viscl = 200 ! When integrating for viscous model, use this many bins.
     real, parameter :: dmdt_visct = 10.d0 ! When integrating for viscous model, consider this many circ times.
+    real, save, dimension(dmdt_viscl) :: dmdt_jrat
     
     ! Likelihood function options
     integer, parameter :: hard_penalties = 2 ! 0: Soft penalties, 1: Gradual hardening while annealing, 2: Always hard

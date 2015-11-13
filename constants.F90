@@ -43,6 +43,7 @@ module constants
     real, parameter :: l10 = dlog(10.d0)
     real, parameter :: il10 = 1.d0/l10
     real, parameter :: pi_G = pi*G
+    real, parameter :: pi_G_isqrt2 = pi*G/sqrt2
     real, parameter :: sigma_b = 5.670373d-5
     real, parameter :: pi_sigma_b = pi*sigma_b
     real, parameter :: fourpi_sigma_b = fourpi*sigma_b

@@ -62,7 +62,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
             tmidint, dtint
     real, dimension(size(tdes)) :: ratio, md1, md2, es, newt, imd1, imd2, rhomd1, rhomd2
     real, dimension(size(tdes),dmdt_viscl) :: md1int, md2int, mdint, tint, es1int, es2int
-    real, dimension(dmdt_viscl) :: jrat
+    real, dimension(dmdt_viscl) :: jrat, intratio
     !real, dimension(:), allocatable :: kernel, temp_mdot
     integer :: i, j, z, bi, ei, begi, endi, cbegi
 

@@ -22,18 +22,19 @@ subroutine load_event(e)
 
 
     integer, intent(in)                     :: e
-    integer                                 :: fn, i, j, bi, ei, band_count
-    real                                    :: flux, dummy
+    integer                                 :: fn, i, j, bi, ei, band_count, version
+    real                                    :: flux, dummy, first_time
     logical                                 :: next_band
     character*2                             :: cur_band
     character*2, dimension(:), allocatable  :: temp_bands
+    character*3                             :: time_unit
     real, dimension(:), allocatable         :: temp_times
 
     fn = 11
 
     if (my_pe .eq. 0) print *, "Loading event '" // trim(event_fnames(e)) // "'..."
     open(unit = fn, file = trim(event_path) // trim(event_fnames(e)) // ".dat", status='old', action='read')
-    read(fn, *) dummy, dummy, dummy
+    read(fn, *) version, dummy, dummy, dummy, time_unit
     read(fn, *) event_claimed_z(e)
     read(fn, *) event_nh(e)
     read(fn, *) event_nhcorr(e), event_restframe(e)
@@ -43,10 +44,19 @@ subroutine load_event(e)
     do i = 1, event_blrpts(e)
         read(fn, *) event_blr_times(i,e), event_blr_vels(i,e), event_blr_bands(i,e), event_blr_exists(i,e)
     enddo
-    event_blr_times(:,e) = event_blr_times(:,e)*yr
     close(fn)
 
-    event_times(:,e) = event_times(:,e)*yr
+    first_time = minval(event_times(:,e))
+    event_times(:,e) = event_times(:,e) - first_time
+    event_blr_times(:,e) = event_blr_times(:,e) - first_time
+
+    if (time_unit == "MJD") then
+        event_times(:,e) = event_times(:,e)*day
+        event_blr_times(:,e) = event_blr_times(:,e)*day
+    else
+        event_times(:,e) = event_times(:,e)*yr
+        event_blr_times(:,e) = event_blr_times(:,e)*yr
+    endif
     if (event_restframe(e) .eq. 1) then
         event_times(:,e) = event_times(:,e)*(1.d0 + event_claimed_z(e)) ! Redshift stretches events in time, need to remove to get actual time-evolution.
         event_ABs(:,e) = event_ABs(:,e) + mag_fac*dlog(1.d0 + event_claimed_z(e))

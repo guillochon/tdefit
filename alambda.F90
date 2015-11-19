@@ -63,6 +63,7 @@ end subroutine
 
 function avintfunc(nu, rv) result(al)
     use tdefit_data, only: avint, avintlen, avconst, bbband
+    use tdefit_interface, only: get_band_type
     use constants
     !use tdefit_interface, ONLY : bisect
 
@@ -82,7 +83,7 @@ function avintfunc(nu, rv) result(al)
 
     nuval = nu - avint(i,1)
 
-    if (bbband .eq. 'X1' .or. bbband .eq. 'X2') then
+    if (get_band_type(bbband) == 'X') then
         al = mag_fac*il10*(nuval*avint(i,4) + avint(i,2))
     else
         al = nhconst*(nuval*avint(i,4) + avint(i,2) + &

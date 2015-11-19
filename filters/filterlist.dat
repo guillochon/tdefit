@@ -25,6 +25,7 @@ U1 UVOT_uvw1.dat
 U2 UVOT_uvw2.dat
 X1 chandra_acis-s_12.dat
 X2 XRT_wind1-4.dat
+Xs XRT_wind1-4_soft.dat
 Ha line_halpha.dat
 He line_heii4686.dat
 Hl line_hlimit.dat

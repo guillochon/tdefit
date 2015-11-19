@@ -180,7 +180,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
     if (begi .gt. endi) return
 
     if (add_delay .and. viscous_dmdt) then
-        mint = (pi_G_isqrt2*sc_mh)/(-emin - orb_ener_correct)**1.5d0
+        mint = 1.00001*(pi_G_isqrt2*sc_mh)/(-emin - orb_ener_correct)**1.5d0
         do i = begi, endi
             tint(i,:) = newt(i) - dmdt_jrat*min(newt(i)-mint,dmdt_visct*circular_time/time_corr)
             intratio = min(max(1.d0 - (-((pi_G_isqrt2*sc_mh/tint(i,:))**two_th) - emin - orb_ener_correct)/edenom, 0.d0), 1.d0)
@@ -230,6 +230,7 @@ subroutine dmdt(tdes, dm, add_delay, im, rhom, mode, ades)
                 dm(i) = dm(i) + dexp((tmidint-tdes(i))/circular_time)*&
                         0.5d0*(mdint(i,j)+mdint(i,j-1))*dtint
             enddo
+            dm(i) = max(dm(i), 0.d0)
         enddo
         dm = dm/circular_time
     else

@@ -51,12 +51,13 @@ program tdefit
                         lmin_trial_time, lmax_trial_time, ybeststep, replace_frac
     real, allocatable, dimension(:) :: fat_most_probable, fat_best_fit
     integer, allocatable :: seed_arr(:)
-    integer :: seed_size
+    integer :: seed_size, version
     integer, dimension(2) :: bestloc
     integer*8, dimension(1) :: mpi_int_in, mpi_int_out
     integer, allocatable, dimension(:,:) :: scount
 
     character(len=128) :: str
+    integer, parameter :: cur_version = 1
 
     logical :: redraw, force_accept, file_exists, replace
 
@@ -188,8 +189,13 @@ program tdefit
 
     do e = 1, event_n
         open(unit = fn, file = trim(event_path) // trim(event_fnames(e)) // ".dat", status='old', action='read')
-        read(fn, *) event_npts(e), event_blrpts(e), event_nbest_bands(e)
+        read(fn, *) version, event_npts(e), event_blrpts(e), event_nbest_bands(e), str
         close(fn)
+
+        if (version /= cur_version) then
+            print *, "Event version mismatch, aborting."
+            call exit(0)
+        endif
     enddo
 
     event_nbest_bands = event_nbest_bands + nextra_bands

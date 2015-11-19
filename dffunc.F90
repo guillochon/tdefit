@@ -67,7 +67,7 @@ function dffunc(bbfunc, lr) result(flux)
     !endif
 
     if (temp .ne. temp) then
-        print *, 'nan temp', r
+        print *, 'nan temp', dfmd, r, df_temp_mult, trial_temp_mult(cur_event)
         call exit(0)
     endif
 

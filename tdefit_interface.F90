@@ -328,5 +328,10 @@ module tdefit_interface
         subroutine write_vars(fn)
             integer, intent(in) :: fn
         end subroutine
+
+        function get_band_type(band) result(bt)
+            character*2, intent(in) :: band
+            character*1, bt
+        end function
     end interface
 end module

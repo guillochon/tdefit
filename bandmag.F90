@@ -440,11 +440,11 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
 
     if (restframe_mode) return
         
-    where (bands .ne. 'Lb' .and. bands .ne. 'X1' .and. bands .ne. 'X2' .and. bands .ne. 'Hl' .and. bands .ne. 'HL' .and. bands .ne. '51')
+    where (bands .ne. 'Lb' .and. bands .ne. 'X1' .and. bands .ne. 'X2' .and. bands .ne. 'Xs' .and. bands .ne. 'Hl' .and. bands .ne. 'HL' .and. bands .ne. '51')
         mags = penalty*ftoABmag(mags)
     endwhere
 
-    where (bands .eq. 'X1' .or. bands .eq. 'X2' .or. bands .eq. 'Hl' .or. bands .eq. 'HL')
+    where (bands .eq. 'X1' .or. bands .eq. 'X2' .or. bands .eq. 'X2' .or. bands .eq. 'Hl' .or. bands .eq. 'HL')
         mags = penalty*ftomag(mags)
     endwhere
 

@@ -14,7 +14,7 @@
 !along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
 
 function bbflux(bbfunc, band, T, z, nh, nhsrc) result(flux)
-    use tdefit_interface, ONLY: alambdaz, filterintfunc, trapezoid, is_abnormal
+    use tdefit_interface, ONLY: alambdaz, filterintfunc, trapezoid, is_abnormal, get_band_type
     use adapt_quad, ONLY: qxgs
     use tdefit_data
 
@@ -25,6 +25,7 @@ function bbflux(bbfunc, band, T, z, nh, nhsrc) result(flux)
 
     real :: flux, fluxtemp, err, minlnu, maxlnu!, midlnu, dummy, numin, numax
     integer :: neval, ierr, i, qng_div
+    character*1 :: band_type
 
     ierr = 0
     qng_div = 1
@@ -166,10 +167,11 @@ function bbflux(bbfunc, band, T, z, nh, nhsrc) result(flux)
         return
     endif
 
+    band_type = get_band_type(band)
     select case (band)
-        case ('X1', 'X2')
+        case ('X')
             flux = flux/h
-        case ('Hl', 'HL')
+        case ('l')
         case default
             ! Necessary to calculate AB magnitudes
             flux = flux/filtnorm(bandi)

@@ -444,7 +444,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
         mags = penalty*ftoABmag(mags)
     endwhere
 
-    where (bands .eq. 'X1' .or. bands .eq. 'X2' .or. bands .eq. 'X2' .or. bands .eq. 'Hl' .or. bands .eq. 'HL')
+    where (bands .eq. 'X1' .or. bands .eq. 'X2' .or. bands .eq. 'Xs' .or. bands .eq. 'Hl' .or. bands .eq. 'HL')
         mags = penalty*ftomag(mags)
     endwhere
 

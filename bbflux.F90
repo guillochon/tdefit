@@ -168,10 +168,9 @@ function bbflux(bbfunc, band, T, z, nh, nhsrc) result(flux)
     endif
 
     band_type = get_band_type(band)
-    select case (band)
+    select case (band_type)
         case ('X')
             flux = flux/h
-        case ('l')
         case default
             ! Necessary to calculate AB magnitudes
             flux = flux/filtnorm(bandi)

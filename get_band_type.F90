@@ -3,7 +3,7 @@ function get_band_type(band) result(bt)
     character*1 :: bt
 
     select case(band)
-        case('X1', 'X2', 'Xs')
+        case('X1', 'X2', 'Xs', 'Xm')
             bt = 'X'
         case('Lb')
             bt = 'L'

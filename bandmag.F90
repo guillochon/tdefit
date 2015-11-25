@@ -19,7 +19,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
     use tdefit_interface, ONLY: ftoABmag, obs_df_func, src_df_func, disk_temp_root, bbflux, trapezoid, &
                                 bbsed, obs_bb_func, src_bb_func, annulus_intercept, disk_temp, &
                                 arv_bb_func, arv_df_func, get_sim_index, bisect, dmdt, &
-                                ftomag, integrate_df
+                                ftomag, integrate_df, get_band_type
     use tdefit_util, ONLY: sort
 
 #include "tdefit.fpp"
@@ -38,6 +38,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
     real :: lmaxmdot, rconst, peaktime, betafrac, t1, t2, ratio, incl_corr, rcirc
     real, dimension(1) :: input, dm, im1, im2
     real, dimension(5) :: zone_locs
+    character*1, dimension(size(bands)) :: band_types
     logical :: check
     
     mags = 0.d0
@@ -440,11 +441,15 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
 
     if (restframe_mode) return
         
-    where (bands .ne. 'Lb' .and. bands .ne. 'X1' .and. bands .ne. 'X2' .and. bands .ne. 'Xs' .and. bands .ne. 'Hl' .and. bands .ne. 'HL' .and. bands .ne. '51')
+    do i = 1, size(bands)
+        band_types(i) = get_band_type(bands(i))
+    enddo
+
+    where (band_types .eq. 'O')
         mags = penalty*ftoABmag(mags)
     endwhere
 
-    where (bands .eq. 'X1' .or. bands .eq. 'X2' .or. bands .eq. 'Xs' .or. bands .eq. 'Hl' .or. bands .eq. 'HL')
+    where (band_types .eq. 'l' .or. band_types .eq. 'X')
         mags = penalty*ftomag(mags)
     endwhere
 

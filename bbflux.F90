@@ -174,7 +174,7 @@ function bbflux(bbfunc, band, T, z, nh, nhsrc) result(flux)
         case default
             ! Necessary to calculate AB magnitudes
             flux = flux/filtnorm(bandi)
-    endselect
+    end select
 
     if (flux .ne. flux) then
         print *, 'bbflux: nan flux', T, bandi, filtnorm(bandi)

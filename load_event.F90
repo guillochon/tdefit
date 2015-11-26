@@ -53,9 +53,12 @@ subroutine load_event(e)
     if (time_unit == "MJD") then
         event_times(:,e) = event_times(:,e)*day
         event_blr_times(:,e) = event_blr_times(:,e)*day
-    else
+    elseif (time_unit == 'yrs')
         event_times(:,e) = event_times(:,e)*yr
         event_blr_times(:,e) = event_blr_times(:,e)*yr
+    else
+        print *, 'Invalid time unit specified in event file, aborting.'
+        call exit(0)
     endif
     if (event_restframe(e) .eq. 1) then
         event_times(:,e) = event_times(:,e)*(1.d0 + event_claimed_z(e)) ! Redshift stretches events in time, need to remove to get actual time-evolution.

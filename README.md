@@ -3,7 +3,7 @@ Originally coded by James Guillochon (http://astrocrash.net).
 
 ##Installation instructions
 
-To install, clone the repository and then compile the code using make. Code only requires a Fortran compiler that supports Fortran 95, and has been tested with both ifort and gfortran. Code requires two sets of data as inputs that are not included in this repository because of their size or proprietary nature: A directory of event data and a directory of dm/dt data.
+To install, clone the repository and then compile the code using make. Code only requires a Fortran compiler that supports Fortran 95, and has been tested with both ifort and gfortran. Code requires two sets of data as inputs that are not included in this repository because of their size or proprietary nature: A directory of event data (available from a separate repository) and a directory of dm/dt data.
 
 ```
 #!csh
@@ -13,11 +13,19 @@ cd tdefit
 make -j tdefit
 wget http://astrocrash.net/files/tdefit-dmdts.tar.gz
 tar -xzf tdefit-dmdts.tar.gz
-wget http://astrocrash.net/files/tdefit-events.tar.gz
-tar -xzf tdefit-events.tar.gz
+hg clone ssh://hg@bitbucket.org/Guillochon/TDE_events
 ```
 
-**Note: At the moment the events data is not available, but will be soon.**
+##Getting started with an example
+
+Within the TDEFit folder is an `example` folder, which will run a fit to ASASSN-14li. To run this example, change to the example directory and run TDEFit.
+
+```
+cd example
+mpirun -np 4 ../tdefit
+```
+
+The first time TDEFit runs, it will spend a few minutes generating binary versions of the ASCII dm/dt files, once those files are created it will read from them for subsequent runs (so long as the `paths.par` file points to the same binary data location).
 
 ##Credits
 

@@ -1,0 +1,65 @@
+# This is a comment, anything leading with a # is a comment
+amoeba_best                0 0 T
+amoeba_spread              2 0 1.d-2
+amoeba_step                1 0 100
+amoeba_tol                 2 0 1.d-4
+annealt0                   2 0 1.d2
+bb_int_divs                1 0 10
+bb_int_method              1 0 5
+bb_int_tol                 2 0 1.d-4
+burn_in                    1 0 -10
+df_int_divs                1 0 10
+df_int_method              1 0 5
+df_int_tol                 2 0 1.d-4
+include_disk               0 0 T
+lf_beta                    1 0 1
+lf_halpha_dispersion       1 0 0
+lf_heii_dispersion         1 0 0
+lf_mh                      1 0 0
+lf_ms                      1 0 1
+lf_variability             1 0 0
+mixstep                    1 0 1
+nanneal                    1 0 30000
+nchains                    1 0 1
+nmcsteps                   1 0 40000
+nwalkers                   1 0 10
+redraw_bad_walkers         0 0 T
+redraw_stationary          0 0 F
+reprocess_model            3 0 clouds
+use_solar_radius           0 0 F
+viscous_dmdt               0 0 T
+wind_phot                  0 0 T
+circ_phot                  0 0 F
+include_circ               0 0 F
+#ecor                       2 1 1.d-6  1.d1 1 T
+alphhr                     2 1 1.d-4  1.d0 1 T
+aspin                      2 1 0.d0   0.998d0
+beta                       2 1 0.5d0  4.d0
+blr_model                  1 1 2
+cap_at_edd                 0 1 T
+exp_1                      2 1 0.d0
+exp_2                      2 1 0.d0   4.d0
+fcor                       2 1 1.d0
+fout                       2 1 1.d-4  1.d0 1 T
+full_disk_coverage         0 1 F
+mh                         2 1 1.d3   4.d8 1 T
+model                      1 1 0      1
+ms                         2 1 1.d-3  1.d2 1 T
+mu_e                       2 1 1.18d0
+nhsrc                      2 1 1.d17  1.d23 1 T
+object_type                1 1 0
+opacity                    2 1 1.d-6  1.d1 1 T
+outflow_frac               2 1 1.d0
+outflow_model              1 1 2
+phi                        2 1 0.d0   0.999d0
+rout                       2 1 1.d5
+rphot                      2 1 1.d-4  1.d4 1 T
+rsc                        2 1 0.5d0  1.d0 1 T
+source_rv                  2 1 2.d0   6.d0
+temperature_model          1 1 1
+time_dep_rin               0 1 T
+time_dep_rout              0 1 T
+toff                       2 1 -1.d8  1.d8
+use_fcor                   0 1 F
+variability                2 1 1.d-4  1.d0 1 T
+viscous_time               2 1 1.d3   1.d9 1 T

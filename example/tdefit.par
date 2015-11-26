@@ -19,9 +19,9 @@ lf_mh                      1 0 0
 lf_ms                      1 0 1
 lf_variability             1 0 0
 mixstep                    1 0 1
-nanneal                    1 0 30000
+nanneal                    1 0 3000
 nchains                    1 0 1
-nmcsteps                   1 0 40000
+nmcsteps                   1 0 4000
 nwalkers                   1 0 10
 redraw_bad_walkers         0 0 T
 redraw_stationary          0 0 F

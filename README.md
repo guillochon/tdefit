@@ -25,7 +25,7 @@ cd example
 mpirun -np 4 ../tdefit
 ```
 
-The first time TDEFit runs, it will spend a few minutes generating binary versions of the ASCII dm/dt files, once those files are created it will read from them for subsequent runs (so long as the `paths.par` file points to the same binary data location).
+The first time TDEFit runs, it will spend a few minutes generating binary versions of the ASCII dm/dt files, once those files are created it will read from them for subsequent runs (so long as the `paths.par` file points to the same binary data location), which is much faster.
 
 ##Credits
 

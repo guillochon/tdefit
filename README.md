@@ -6,8 +6,6 @@ Originally coded by James Guillochon (http://astrocrash.net).
 To install, clone the repository and then compile the code using make. Code only requires a Fortran compiler that supports Fortran 95, and has been tested with both ifort and gfortran. Code requires two sets of data as inputs that are not included in this repository because of their size or proprietary nature: A directory of event data (available from a separate repository) and a directory of dm/dt data.
 
 ```
-#!csh
-
 hg clone ssh://hg@bitbucket.org/Guillochon/tdefit
 cd tdefit
 make -j tdefit

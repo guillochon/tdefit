@@ -17,7 +17,7 @@ subroutine load_event(e)
 #include "tdefit.fpp"
     use tdefit_data
     use constants
-    use tdefit_interface, only: bbflux, obs_bb_func
+    use tdefit_interface, only: bbflux, obs_bb_func, get_band_type
     use tdefit_util, only: sort2
 
 
@@ -25,6 +25,7 @@ subroutine load_event(e)
     integer                                 :: fn, i, j, bi, ei, band_count, version
     real                                    :: flux, dummy, first_time
     logical                                 :: next_band
+    character*1                             :: band_type
     character*2                             :: cur_band
     character*2, dimension(:), allocatable  :: temp_bands
     character*3                             :: time_unit
@@ -40,6 +41,10 @@ subroutine load_event(e)
     read(fn, *) event_nhcorr(e), event_restframe(e)
     do i = 1, event_npts(e)
         read(fn, *) event_bands(i,e), event_times(i,e), event_ABs(i,e), event_errs(i,e), event_types(i,e)
+        band_type = get_band_type(event_bands(i,e))
+        if (band_type == 'X') then
+            event_ABs(i,e) = -event_ABs(i,e)*mag_fac
+        endif
     enddo
     do i = 1, event_blrpts(e)
         read(fn, *) event_blr_times(i,e), event_blr_vels(i,e), event_blr_bands(i,e), event_blr_exists(i,e)
@@ -53,7 +58,7 @@ subroutine load_event(e)
     if (time_unit == "MJD") then
         event_times(:,e) = event_times(:,e)*day
         event_blr_times(:,e) = event_blr_times(:,e)*day
-    elseif (time_unit == 'yrs')
+    elseif (time_unit == 'yrs') then
         event_times(:,e) = event_times(:,e)*yr
         event_blr_times(:,e) = event_blr_times(:,e)*yr
     else

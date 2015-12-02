@@ -187,6 +187,8 @@ program tdefit
 
     call tdefit_print('Loading events')
 
+    event_npts = 0
+    event_blrpts = 0
     do e = 1, event_n
         call load_event(e,.true.)
     enddo

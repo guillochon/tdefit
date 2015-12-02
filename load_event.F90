@@ -24,18 +24,16 @@ subroutine load_event(e, prepare)
     integer, intent(in)                     :: e
     logical, intent(in)                     :: prepare
 
+    integer                                 :: p, nbuf, stat, begk, endk, loc, loc2
     integer                                 :: fn, i, j, bi, ei, band_count, version
-    real                                    :: flux, dummy, first_time
+    real                                    :: flux, first_time
     logical                                 :: next_band
     character*1                             :: band_type
     character*2                             :: cur_band
+    character*50                            :: var_name
+    character*500                           :: buffer
     character*2, dimension(:), allocatable  :: temp_bands
-    character*3                             :: time_unit
     real, dimension(:), allocatable         :: temp_times
-    character*50 :: var_name, str_value
-    character*200 :: buffer
-    integer :: int_value, p, pcount, nbuf, stat, begk, endk
-    integer :: loc, loc2
 
     fn = 11
 
@@ -49,9 +47,9 @@ subroutine load_event(e, prepare)
     ! Read through file twice, first is to simply count number of photometric and BLR points
     stat = 0
     linedo: do
-        read(fn, '(A200)', iostat=stat, size=nbuf, advance='no') buffer
+        read(fn, '(A500)', iostat=stat, size=nbuf, advance='no') buffer
         if (is_iostat_eor(stat)) then
-            j = 1
+            j = 0
             loc = 1
             loc2 = 1
             do while(loc2 .ne. 0)
@@ -60,6 +58,7 @@ subroutine load_event(e, prepare)
                     loc = loc + 1
                     cycle
                 endif
+                j = j + 1
                 if (loc2 .eq. 0) then
                     begk = loc
                     endk = nbuf
@@ -70,11 +69,10 @@ subroutine load_event(e, prepare)
                 endif
 
                 if (j .eq. 1) then
+                    var_name = ''
                     read(buffer(begk:endk),*) var_name
-                endif
-
-                if (j .gt. 1) then
-                    select case (var_name)
+                else
+                    select case (trim(var_name))
                         case ('photometry')
                             if (prepare) then
                                 if (j .eq. 2) event_npts(e) = event_npts(e) + 1
@@ -102,7 +100,7 @@ subroutine load_event(e, prepare)
                         case ('broad_line')
                             if (prepare) then
                                 if (j .eq. 2) event_blrpts(e) = event_blrpts(e) + 1
-                                if (j .gt. 2) cycle linedo
+                                cycle linedo
                             endif
                             select case (j)
                                 case (2)
@@ -134,8 +132,8 @@ subroutine load_event(e, prepare)
                     end select
                 endif
             enddo
-            if (i .eq. 2) then
-                select case (var_name)
+            if (.not. prepare) then
+                select case (trim(var_name))
                     case ('photometry')
                         if (my_pe .eq. 0) then
                             do p = 1, event_npts(e)
@@ -157,15 +155,15 @@ subroutine load_event(e, prepare)
 
     ! Sanity check some inputs
     if (event_claimed_z(e) .le. 0.d0) then
-        print *, 'Invalid redshift specified, aborting.'
+        if (my_pe .eq. 0) print *, 'Invalid redshift specified, aborting.'
         call exit(0)
     endif
     if (event_nh(e) .lt. 0.d0) then
-        print *, 'Invalid nh specified, aborting.'
+        if (my_pe .eq. 0) print *, 'Invalid nh specified, aborting.'
         call exit(0)
     endif
-    if (event_npts(e) .eq. 0) then
-        print *, 'Must specify at least one photometric point.'
+    if (event_npts(e) .le. 0) then
+        if (my_pe .eq. 0) print *, 'Must specify at least one photometric point.'
         call exit(0)
     endif
 

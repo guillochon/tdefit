@@ -120,36 +120,35 @@ module tdefit_data
     integer, parameter                   :: nextra_bands = size(extra_bands)
 
     ! Adjustable physical parameters.
-    logical, parameter          :: time_weighted = .false.        ! Default: false
-    logical, parameter          :: penalize_early_time = .true.   ! Default: true
-    logical, parameter          :: no_source_extinction = .false. ! Default: false
-    logical, parameter          :: include_recomb = .true.        ! Default: false (CURRENTLY NOT USED)
-    logical, parameter          :: boost_accepts = .false.
-    logical, save :: wind_phot
-    logical, save :: circ_phot
-    logical, save :: include_circ
-    logical, save :: viscous_dmdt
-    logical, save :: use_solar_radius
-    logical, save :: include_disk
-    logical, save :: redraw_stationary
-    logical, save :: redraw_bad_walkers
-    logical, save :: redraw_using_best
-    logical, save :: extra_reflect
-    logical, save :: disallow_unphysical_models
-    logical, save :: fixed_angle_frac
-    real, save :: annulus_width, df_rphot, df_temp_mult
-    real, save :: df_intercept_frac, ai_mu, ai_sig
-    integer, save :: reprocess_model
-    integer, save :: annulus_divs = 1000
+    logical, parameter :: time_weighted = .false.        ! Default: false
+    logical, parameter :: penalize_early_time = .true.   ! Default: true
+    logical, parameter :: no_source_extinction = .false. ! Default: false
+    logical, parameter :: include_recomb = .true.        ! Default: false (CURRENTLY NOT USED)
+    logical, parameter :: boost_accepts = .false.
+    logical, save      :: wind_phot
+    logical, save      :: circ_phot
+    logical, save      :: include_circ
+    logical, save      :: viscous_dmdt
+    logical, save      :: use_solar_radius
+    logical, save      :: include_disk
+    logical, save      :: redraw_stationary
+    logical, save      :: redraw_bad_walkers
+    logical, save      :: redraw_using_best
+    logical, save      :: extra_reflect
+    logical, save      :: disallow_unphysical_models
+    logical, save      :: fixed_angle_frac
+    real, save         :: annulus_width, df_rphot, df_temp_mult
+    real, save         :: df_intercept_frac, ai_mu, ai_sig
+    integer, save      :: reprocess_model
+    integer, save      :: annulus_divs = 1000
 
     logical, save :: dfreject = .false.
 
     logical, save :: amoeba_best
-    real, save :: amoeba_spread, amoeba_tol
+    real, save    :: amoeba_spread, amoeba_tol
     integer, save :: amoeba_step
 
     real, parameter :: upp_lim_err = 0.001d0 !Assumed errors on upper limits with no defined errors, in magnitudes.
-    !real, parameter :: tidal_ms_0 = 1.0d0, tidal_ms_1 = 1.1d0 !This set of parameters is used to mimic degen. core disruptions.
 
     ! Parameters relating to imported simulation data.
     real, parameter :: dele_time = 2.5d5 !Time after pericenter to sample change in energy
@@ -162,7 +161,7 @@ module tdefit_data
     real, parameter :: min_abs_e = 11.d0 ! Minimum log value in E before smoothing
     integer, parameter :: n_early_bins = 2000
     integer, parameter :: dmdt_viscl = 200 ! When integrating for viscous model, use this many bins.
-    real, parameter :: dmdt_visct = 10.d0 ! When integrating for viscous model, consider this many circ times.
+    real, parameter :: dmdt_visct = 5.d0 ! When integrating for viscous model, consider this many circ times.
     real, save, dimension(dmdt_viscl) :: dmdt_jrat
     
     ! Likelihood function options

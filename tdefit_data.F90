@@ -48,6 +48,7 @@ module tdefit_data
     integer, save, allocatable, dimension(:) :: event_npts, event_blrpts, event_nbest_bands
     real, save, allocatable, dimension(:) :: event_nh, event_claimed_z, event_min_aspin
     character*100, save, allocatable, dimension(:) :: event_fnames
+    character*3, save, allocatable, dimension(:,:) :: event_time_units, event_blr_time_units
     character*2, save, allocatable, dimension(:,:) :: event_bands, event_blr_bands, event_best_bands
     real, save, allocatable, dimension(:,:) :: event_times, event_ABs, event_devs, event_errs, event_weights, &
                                                event_blr_times, event_blr_vels

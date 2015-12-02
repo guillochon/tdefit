@@ -188,14 +188,7 @@ program tdefit
     call tdefit_print('Loading events')
 
     do e = 1, event_n
-        open(unit = fn, file = trim(event_path) // trim(event_fnames(e)) // ".dat", status='old', action='read')
-        read(fn, *) version, event_npts(e), event_blrpts(e), event_nbest_bands(e), str
-        close(fn)
-
-        if (version /= cur_version) then
-            print *, "Event version mismatch, aborting."
-            call exit(0)
-        endif
+        call load_event(e,.true.)
     enddo
 
     event_nbest_bands = event_nbest_bands + nextra_bands
@@ -203,11 +196,23 @@ program tdefit
     event_max_npts = maxval(event_npts)
     event_max_blrpts = maxval(event_blrpts)
     event_max_nbest_bands = maxval(event_nbest_bands)
+
     allocate(event_bands(event_max_npts,event_n))
     allocate(event_best_bands(event_max_nbest_bands,event_n))
+    allocate(event_time_units(event_max_npts,event_n))
     allocate(event_times(event_max_npts,event_n))
     allocate(event_ABs(event_max_npts,event_n))
     allocate(event_errs(event_max_npts,event_n))
+    allocate(event_devs(event_max_npts,event_n))
+    allocate(event_weights(event_max_npts,event_n))
+    allocate(event_penalties(event_max_npts,event_n))
+    allocate(event_types(event_max_npts,event_n))
+    allocate(event_blr_time_units(event_max_blrpts,event_n))
+    allocate(event_blr_times(event_max_blrpts,event_n))
+    allocate(event_blr_vels(event_max_blrpts,event_n))
+    allocate(event_blr_bands(event_max_blrpts,event_n))
+    allocate(event_blr_exists(event_max_blrpts,event_n))
+
     allocate(trial_times(event_max_npts,event_n))
     allocate(trial_fbs(event_max_npts,event_n))
     allocate(trial_mdots(event_max_npts,event_n))
@@ -215,18 +220,10 @@ program tdefit
     allocate(trial_routs(event_max_npts,event_n))
     allocate(trial_rphots(event_max_npts,event_n))
     allocate(trial_mags(event_max_npts,event_n))
-    allocate(event_devs(event_max_npts,event_n))
-    allocate(event_weights(event_max_npts,event_n))
-    allocate(event_penalties(event_max_npts,event_n))
-    allocate(event_types(event_max_npts,event_n))
-    allocate(event_blr_times(event_max_blrpts,event_n))
-    allocate(event_blr_vels(event_max_blrpts,event_n))
-    allocate(event_blr_bands(event_max_blrpts,event_n))
-    allocate(event_blr_exists(event_max_blrpts,event_n))
 
     nvars = 0
     do e = 1, event_n
-        call load_event(e)
+        call load_event(e,.false.)
         call set_event(e)
         call load_defaults(1)
         call load_user_vars(1)
@@ -1654,6 +1651,12 @@ program tdefit
     deallocate(event_min_aspin)
     deallocate(event_nhcorr)
     deallocate(event_restframe)
+    deallocate(event_time_units)
+    deallocate(event_blr_time_units)
+    deallocate(event_blr_times)
+    deallocate(event_blr_vels)
+    deallocate(event_blr_bands)
+    deallocate(event_blr_exists)
     deallocate(trial_mh)
     deallocate(trial_ms)
     deallocate(trial_rs)

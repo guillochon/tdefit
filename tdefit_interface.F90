@@ -82,8 +82,9 @@ module tdefit_interface
             logical, intent(in), optional :: retj
             integer :: i
         end function
-        subroutine load_event(e)
+        subroutine load_event(e, prepare)
             integer, intent(in)     :: e
+            logical, intent(in)     :: prepare
         end subroutine
 
         function filterfunc(nu) result(frac)

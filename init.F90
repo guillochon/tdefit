@@ -110,7 +110,8 @@ subroutine init
     allocate(d_emax(1:nruns))
 
     do i = 1, dmdt_viscl
-        dmdt_jrat(i) = 1.d0 - ((dble(i)-1.)/(dble(dmdt_viscl)-1.))**2
+        !dmdt_jrat(i) = 1.d0 - ((dble(i)-1.)/(dble(dmdt_viscl)-1.))**2
+        dmdt_jrat(i) = 1.d0 - log((dmdt_viscl-dble(i)+1.))/log(1./dmdt_viscl)
     enddo
 
     sim_dele = 0.d0

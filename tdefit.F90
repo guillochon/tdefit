@@ -225,10 +225,26 @@ program tdefit
         call set_event(e)
         call load_defaults(1)
         call load_user_vars(1)
+        cur => ll(e)%p
+        event_nbest_bands(e) = nextra_bands
+        do while (associated(cur))
+            event_nbest_bands(e) = event_nbest_bands(e) + 1
+            cur => cur%next
+        enddo
     enddo
 
     event_max_nbest_bands = maxval(event_nbest_bands)
     allocate(event_best_bands(event_max_nbest_bands,event_n))
+
+    do e = 1, event_n
+        cur => ll(e)%p
+        i = 0
+        do while (associated(cur))
+            i = i + 1
+            event_best_bands(i,e) = cur%band
+            cur => cur%next
+        enddo
+    enddo
 
     do e = 1, event_n
         do i = 1, nextra_bands

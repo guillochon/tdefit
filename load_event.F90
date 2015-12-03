@@ -310,16 +310,5 @@ subroutine load_event(e, prepare)
         cur => cur%next
     enddo
 
-    event_nbest_bands(e) = band_count + nextra_bands
-
-    ! Loop through band list
-    cur => ll(e)%p
-    i = 0
-    do while (associated(cur))
-        i = i + 1
-        event_best_bands(i,e) = cur%band
-        cur => cur%next
-    enddo
-
     event_errs(:event_npts(e),e) = event_errs(:,e)**2
 end subroutine

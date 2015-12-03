@@ -54,7 +54,7 @@ module tdefit_data
                                                event_blr_times, event_blr_vels
     integer, save, allocatable, dimension(:,:) :: event_types, event_penalties
     logical, save, allocatable, dimension(:,:) :: event_blr_exists
-    integer, save, allocatable, dimension(:) :: event_nhcorr, event_restframe
+    logical, save, allocatable, dimension(:)   :: event_nhcorr, event_restframe
 
     real, save :: reduced_chi2_const
 

@@ -193,14 +193,10 @@ program tdefit
         call load_event(e,.true.)
     enddo
 
-    event_nbest_bands = event_nbest_bands + nextra_bands
-
     event_max_npts = maxval(event_npts)
     event_max_blrpts = maxval(event_blrpts)
-    event_max_nbest_bands = maxval(event_nbest_bands)
 
     allocate(event_bands(event_max_npts,event_n))
-    allocate(event_best_bands(event_max_nbest_bands,event_n))
     allocate(event_time_units(event_max_npts,event_n))
     allocate(event_times(event_max_npts,event_n))
     allocate(event_ABs(event_max_npts,event_n))
@@ -229,6 +225,15 @@ program tdefit
         call set_event(e)
         call load_defaults(1)
         call load_user_vars(1)
+    enddo
+
+    event_max_nbest_bands = maxval(event_nbest_bands)
+    allocate(event_best_bands(event_max_nbest_bands,event_n))
+
+    do e = 1, event_n
+        do i = 1, nextra_bands
+            event_best_bands(event_nbest_bands(e) - nextra_bands + i,e) = extra_bands(i)
+        enddo
     enddo
 
     if (sum(event_npts) .le. nvars - 1) then

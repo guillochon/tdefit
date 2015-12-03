@@ -31,7 +31,6 @@ viscous_dmdt			0	0	T
 wind_phot				0	0	T
 circ_phot				0	0	F
 include_circ			0	0	F
-#ecor					2	1	1.d-6	1.d1	1	T
 alphhr					2	1	1.d-4	1.d0	1	T
 aspin					2	1	0.d0	0.998d0
 beta					2	1	0.5d0	4.d0

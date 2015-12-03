@@ -24,7 +24,8 @@ subroutine load_user_vars(mode)
     real :: dbl_value, dbl_mvalue
     logical :: log_value, log_mvalue, is_log, is_search_var
     integer :: fn, stat, int_value, int_mvalue, var_kind, ngrid, i, &
-               n, nbuf, j, loc, loc2, begk, endk, m, var_trial, nb, ne, o
+               n, nbuf, j, loc, loc2, begk, endk, m, var_trial, nb, ne, o, &
+               locspace, loctab, loccomma
 
     fn = 15
     open(unit = fn, file = "tdefit.par", status='old', action='read')
@@ -40,10 +41,14 @@ subroutine load_user_vars(mode)
                 is_search_var = .false.
                 ngrid = 1
                 is_log = .false.
-                loc2 = 1
-                do while(loc2 .ne. 0)
-                    loc2 = index(trim(buffer(loc:)), " ")
-                    if (loc2 .eq. 1) then
+                locspace = 1
+                loctab = 1
+                loccomma = 1
+                do while(locspace .ne. 0 .or. loctab .ne. 0 .or. loccomma .ne. 0)
+                    locspace = index(trim(buffer(loc:)), " ")
+                    loctab = index(trim(buffer(loc:)), char(9))
+                    loccomma = index(trim(buffer(loc:)), ",")
+                    if (locspace .eq. 1 .or. loctab .eq. 1 .or. loccomma .eq. 1) then
                         loc = loc + 1
                         cycle
                     endif
@@ -51,12 +56,14 @@ subroutine load_user_vars(mode)
                         if (buffer(loc:loc) .eq. '#') cycle linedo
                     endif
                     j = j + 1
-                    if (loc2 .eq. 0) then
+                    if (locspace .eq. 0 .and. loctab .eq. 0 .and. loccomma .eq. 0) then
                         begk = loc
                         endk = nbuf
                     else
+                        loc2 = minval( (/ locspace, loctab, loccomma /), &
+                            mask = (/ locspace, loctab, loccomma /) .ne. 0)
                         begk = loc
-                        endk = loc+loc2-2
+                        endk = loc + loc2 - 2
                         loc = loc + loc2
                     endif
 

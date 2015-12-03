@@ -13,4 +13,4 @@ dmdts
 events
 version.fpp
 example/**
-example/binary_data/**
+binary_data/**

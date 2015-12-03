@@ -191,8 +191,11 @@ subroutine load_event(e, prepare)
     event_blr_times(:,e) = event_blr_times(:,e) - first_time
 
     do i = 1, event_npts(e)
-        if (event_time_units(i,e) == 'MJD') then
+        if (event_time_units(i,e) == 'MJD' .or. trim(event_time_units(i,e)) == 'JD') then
             event_times(i,e) = event_times(i,e)*day
+            if (trim(event_time_units(i,e)) == 'JD') then
+                event_times(i,e) = event_times(i,e) - 2400000.5
+            endif
         elseif (event_time_units(i,e) == 'yrs') then
             event_times(i,e) = event_times(i,e)*yr
         else
@@ -202,8 +205,11 @@ subroutine load_event(e, prepare)
     enddo
 
     do i = 1, event_blrpts(e)
-        if (event_blr_time_units(i,e) == 'MJD') then
+        if (event_blr_time_units(i,e) == 'MJD' .or. trim(event_blr_time_units(i,e)) == 'JD') then
             event_blr_times(i,e) = event_blr_times(i,e)*day
+            if (trim(event_blr_time_units(i,e)) == 'JD') then
+                event_blr_times(i,e) = event_blr_times(i,e) - 2400000.5
+            endif
         elseif (event_blr_time_units(i,e) == 'yrs') then
             event_blr_times(i,e) = event_blr_times(i,e)*yr
         else

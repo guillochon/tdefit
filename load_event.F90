@@ -139,12 +139,12 @@ subroutine load_event(e, prepare)
             if (.not. prepare) then
                 select case (trim(var_name))
                     case ('photometry')
-                        if (my_pe .eq. 0) then
+                        !if (my_pe .eq. 0) then
                             write(*,'(A15,X,A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I1)') &
                                 var_name, event_time_units(phoi,e), event_times(phoi,e), &
                                 event_bands(phoi,e), event_ABs(phoi,e), event_errs(phoi,e), &
                                 event_types(phoi,e)
-                        endif
+                        !endif
                 end select
             endif
         elseif (is_iostat_end(stat)) then
@@ -183,20 +183,20 @@ subroutine load_event(e, prepare)
 
     do i = 1, event_npts(e)
         if (event_time_units(i,e) == 'MJD') then
-            event_times(:,e) = event_times(:,e)*day
+            event_times(i,e) = event_times(i,e)*day
         elseif (event_time_units(i,e) == 'yrs') then
-            event_times(:,e) = event_times(:,e)*yr
+            event_times(i,e) = event_times(i,e)*yr
         else
-            print *, 'Invalid time unit specified for photometric point in event file, aborting.', event_time_units(i,e)
+            print *, 'Invalid time unit specified for photometric point in event file, aborting.'
             call exit(0)
         endif
     enddo
 
     do i = 1, event_blrpts(e)
         if (event_blr_time_units(i,e) == 'MJD') then
-            event_blr_times(:,e) = event_blr_times(:,e)*day
+            event_blr_times(i,e) = event_blr_times(i,e)*day
         elseif (event_blr_time_units(i,e) == 'yrs') then
-            event_blr_times(:,e) = event_blr_times(:,e)*yr
+            event_blr_times(i,e) = event_blr_times(i,e)*yr
         else
             print *, 'Invalid time unit specified for broad line point in event file, aborting.'
             call exit(0)

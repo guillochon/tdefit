@@ -24,7 +24,8 @@ subroutine load_event(e, prepare)
     integer, intent(in)                     :: e
     logical, intent(in)                     :: prepare
 
-    integer                                 :: phoi, blri, nbuf, stat, begk, endk, loc, loc2
+    integer                                 :: phoi, blri, nbuf, stat, begk, endk
+    integer                                 :: loc, locspace, loctab, loccomma, loc2
     integer                                 :: fn, i, j, bi, ei, band_count, version
     real                                    :: flux, first_time
     logical                                 :: next_band
@@ -53,20 +54,26 @@ subroutine load_event(e, prepare)
         if (is_iostat_eor(stat)) then
             j = 0
             loc = 1
-            loc2 = 1
-            do while(loc2 .ne. 0)
-                loc2 = index(trim(buffer(loc:)), " ")
-                if (loc2 .eq. 1) then
+            locspace = 1
+            loctab = 1
+            loccomma = 1
+            do while(locspace .ne. 0 .or. loctab .ne. 0 .or. loccomma .ne. 0)
+                locspace = index(trim(buffer(loc:)), " ")
+                loctab = index(trim(buffer(loc:)), char(9))
+                loccomma = index(trim(buffer(loc:)), ",")
+                if (locspace .eq. 1 .or. loctab .eq. 1 .or. loccomma .eq. 1) then
                     loc = loc + 1
                     cycle
                 endif
                 j = j + 1
-                if (loc2 .eq. 0) then
+                if (locspace .eq. 0 .and. loctab .eq. 0 .and. loccomma .eq. 0) then
                     begk = loc
                     endk = nbuf
                 else
+                    loc2 = minval( (/ locspace, loctab, loccomma /), &
+                        mask = (/ locspace, loctab, loccomma /) .ne. 0)
                     begk = loc
-                    endk = loc+loc2-2
+                    endk = loc + loc2 - 2
                     loc = loc + loc2
                 endif
 
@@ -139,12 +146,12 @@ subroutine load_event(e, prepare)
             if (.not. prepare) then
                 select case (trim(var_name))
                     case ('photometry')
-                        !if (my_pe .eq. 0) then
+                        if (my_pe .eq. 0) then
                             write(*,'(A15,X,A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I1)') &
                                 var_name, event_time_units(phoi,e), event_times(phoi,e), &
                                 event_bands(phoi,e), event_ABs(phoi,e), event_errs(phoi,e), &
                                 event_types(phoi,e)
-                        !endif
+                        endif
                 end select
             endif
         elseif (is_iostat_end(stat)) then

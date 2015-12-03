@@ -140,7 +140,7 @@ subroutine load_event(e, prepare)
                 select case (trim(var_name))
                     case ('photometry')
                         if (my_pe .eq. 0) then
-                            write(*,'(A20,X,A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I10)') &
+                            write(*,'(A15,X,A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I1)') &
                                 var_name, event_time_units(phoi,e), event_times(phoi,e), &
                                 event_bands(phoi,e), event_ABs(phoi,e), event_errs(phoi,e), &
                                 event_types(phoi,e)

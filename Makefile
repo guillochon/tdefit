@@ -21,8 +21,8 @@ endif
 
 ifdef GFORT
 	NSO = -fno-strict-overflow -fwrapv
-#	FCFLAGS = -O3 -m64 -ffree-form -ffree-line-length-none -fimplicit-none -fdefault-double-8 -fdefault-real-8
-	FCFLAGS = -g -O0 -m64 -ffree-form -ffree-line-length-none -fimplicit-none -fdefault-double-8 -fdefault-real-8 \
+	FCFLAGS = -O3 -m64 -ffree-form -ffree-line-length-none -fimplicit-none -fdefault-double-8 -fdefault-real-8
+#	FCFLAGS = -g -O0 -m64 -ffree-form -ffree-line-length-none -fimplicit-none -fdefault-double-8 -fdefault-real-8 \
 	-fbacktrace -fbounds-check
 else
 	NSO =

@@ -24,13 +24,13 @@ subroutine load_event(e, prepare)
     integer, intent(in)                     :: e
     logical, intent(in)                     :: prepare
 
-    integer                                 :: p, nbuf, stat, begk, endk, loc, loc2
+    integer                                 :: phoi, blri, nbuf, stat, begk, endk, loc, loc2
     integer                                 :: fn, i, j, bi, ei, band_count, version
     real                                    :: flux, first_time
     logical                                 :: next_band
     character*1                             :: band_type
     character*2                             :: cur_band
-    character*50                            :: var_name
+    character*50                            :: var_name, str_value
     character*500                           :: buffer
     character*2, dimension(:), allocatable  :: temp_bands
     real, dimension(:), allocatable         :: temp_times
@@ -46,6 +46,8 @@ subroutine load_event(e, prepare)
 
     ! Read through file twice, first is to simply count number of photometric and BLR points
     stat = 0
+    phoi = 0
+    blri = 0
     linedo: do
         read(fn, '(A500)', iostat=stat, size=nbuf, advance='no') buffer
         if (is_iostat_eor(stat)) then
@@ -76,21 +78,22 @@ subroutine load_event(e, prepare)
                         case ('photometry')
                             if (prepare) then
                                 if (j .eq. 2) event_npts(e) = event_npts(e) + 1
-                                if (j .gt. 2) cycle linedo
+                                cycle linedo
                             endif
                             select case (j)
                                 case (2)
-                                    read(buffer(begk:endk),*) event_bands(p,e)
+                                    phoi = phoi + 1
+                                    read(buffer(begk:endk),*) event_time_units(phoi,e)
                                 case (3)
-                                    read(buffer(begk:endk),*) event_time_units(p,e)
+                                    read(buffer(begk:endk),*) event_times(phoi,e)
                                 case (4)
-                                    read(buffer(begk:endk),*) event_times(p,e)
+                                    read(buffer(begk:endk),*) event_bands(phoi,e)
                                 case (5)
-                                    read(buffer(begk:endk),*) event_ABs(p,e)
+                                    read(buffer(begk:endk),*) event_ABs(phoi,e)
                                 case (6)
-                                    read(buffer(begk:endk),*) event_errs(p,e)
+                                    read(buffer(begk:endk),*) event_errs(phoi,e)
                                 case (7)
-                                    read(buffer(begk:endk),*) event_types(p,e)
+                                    read(buffer(begk:endk),*) event_types(phoi,e)
                                 case default
                                     if (my_pe .eq. 0) then
                                         print *, 'Too many columns for photometric point! Aborting.'
@@ -104,15 +107,16 @@ subroutine load_event(e, prepare)
                             endif
                             select case (j)
                                 case (2)
-                                    read(buffer(begk:endk),*) event_blr_time_units(p,e)
+                                    blri = blri + 1
+                                    read(buffer(begk:endk),*) event_blr_time_units(blri,e)
                                 case (3)
-                                    read(buffer(begk:endk),*) event_blr_times(p,e)
+                                    read(buffer(begk:endk),*) event_blr_times(blri,e)
                                 case (4)
-                                    read(buffer(begk:endk),*) event_blr_vels(p,e)
+                                    read(buffer(begk:endk),*) event_blr_vels(blri,e)
                                 case (5)
-                                    read(buffer(begk:endk),*) event_blr_bands(p,e)
+                                    read(buffer(begk:endk),*) event_blr_bands(blri,e)
                                 case (6)
-                                    read(buffer(begk:endk),*) event_blr_exists(p,e)
+                                    read(buffer(begk:endk),*) event_blr_exists(blri,e)
                                 case default
                                     if (my_pe .eq. 0) then
                                         print *, 'Too many columns for broad line point! Aborting.'
@@ -136,11 +140,10 @@ subroutine load_event(e, prepare)
                 select case (trim(var_name))
                     case ('photometry')
                         if (my_pe .eq. 0) then
-                            do p = 1, event_npts(e)
-                                write(*,'(A20,E10.3,E10.3,E10.3,E10.3,L10)') var_name, &
-                                    event_time_units(p,e), event_times(p,e), &
-                                    event_ABs(p,e), event_errs(p,e), event_types(p,e)
-                            enddo
+                            write(*,'(A20,X,A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I10)') &
+                                var_name, event_time_units(phoi,e), event_times(phoi,e), &
+                                event_bands(phoi,e), event_ABs(phoi,e), event_errs(phoi,e), &
+                                event_types(phoi,e)
                         endif
                 end select
             endif
@@ -179,24 +182,20 @@ subroutine load_event(e, prepare)
     event_blr_times(:,e) = event_blr_times(:,e) - first_time
 
     do i = 1, event_npts(e)
-        if (event_time_units(i,e) == "MJD") then
+        if (event_time_units(i,e) == 'MJD') then
             event_times(:,e) = event_times(:,e)*day
-            event_blr_times(:,e) = event_blr_times(:,e)*day
         elseif (event_time_units(i,e) == 'yrs') then
             event_times(:,e) = event_times(:,e)*yr
-            event_blr_times(:,e) = event_blr_times(:,e)*yr
         else
-            print *, 'Invalid time unit specified for photometric point in event file, aborting.'
+            print *, 'Invalid time unit specified for photometric point in event file, aborting.', event_time_units(i,e)
             call exit(0)
         endif
     enddo
 
     do i = 1, event_blrpts(e)
-        if (event_blr_time_units(i,e) == "MJD") then
-            event_times(:,e) = event_times(:,e)*day
+        if (event_blr_time_units(i,e) == 'MJD') then
             event_blr_times(:,e) = event_blr_times(:,e)*day
         elseif (event_blr_time_units(i,e) == 'yrs') then
-            event_times(:,e) = event_times(:,e)*yr
             event_blr_times(:,e) = event_blr_times(:,e)*yr
         else
             print *, 'Invalid time unit specified for broad line point in event file, aborting.'
@@ -204,7 +203,7 @@ subroutine load_event(e, prepare)
         endif
     enddo
 
-    if (event_restframe(e) .eq. 1) then
+    if (event_restframe(e)) then
         event_times(:,e) = event_times(:,e)*(1.d0 + event_claimed_z(e)) ! Redshift stretches events in time, need to remove to get actual time-evolution.
         event_ABs(:,e) = event_ABs(:,e) + mag_fac*dlog(1.d0 + event_claimed_z(e))
     endif
@@ -281,11 +280,6 @@ subroutine load_event(e, prepare)
         endif
     enddo
 
-    if (band_count .ne. event_nbest_bands(e) - nextra_bands) then
-        write (*, *), 'Error, actual band count does not match header.'
-        call exit(0)
-    endif
-
     if (time_weighted) event_weights(:,e) = event_weights(:,e) / sum(event_weights(:,e))
 
     allocate(temp_times(event_npts(e)))
@@ -304,7 +298,7 @@ subroutine load_event(e, prepare)
 
     cur => ll(e)%p
     do while (associated(cur))
-        if (remove_extinction_corr .and. event_nhcorr(e) .eq. 1) then
+        if (remove_extinction_corr .and. event_nhcorr(e)) then
             ! The light curves are already corrected for extinction, this "uncorrects" the magnitudes by presuming the flux in the band is in the Rayleigh Jeans limit.
             flux = bbflux(obs_bb_func, cur%band, 1.d6, 0.d0, event_nh(e), 0.d0)
             flux = bbflux(obs_bb_func, cur%band, 1.d6, 0.d0, 0.d0, 0.d0)/flux
@@ -316,6 +310,8 @@ subroutine load_event(e, prepare)
         cur => cur%next
     enddo
 
+    event_nbest_bands(e) = band_count + nextra_bands
+
     ! Loop through band list
     cur => ll(e)%p
     i = 0
@@ -325,13 +321,5 @@ subroutine load_event(e, prepare)
         cur => cur%next
     enddo
 
-    do i = 1, nextra_bands
-        event_best_bands(event_nbest_bands(e) - nextra_bands + i,e) = extra_bands(i)
-    enddo
-
-    ! The error bars don't include intrinsic variability, this updates the error bars to more appropriately reflect the uncertainty.
-    !where (event_types .eq. 0)
-    !    event_errs = event_errs + mag_fac*dlog10(1.d0 + variability)
-    !endwhere
     event_errs(:event_npts(e),e) = event_errs(:,e)**2
 end subroutine

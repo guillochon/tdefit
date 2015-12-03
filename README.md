@@ -11,6 +11,7 @@ cd tdefit
 make -j tdefit
 wget http://astrocrash.net/files/tdefit-dmdts.tar.gz
 tar -xzf tdefit-dmdts.tar.gz
+rm tdefit-dmdts.tar.gz
 hg clone ssh://hg@bitbucket.org/Guillochon/TDE_events
 ```
 

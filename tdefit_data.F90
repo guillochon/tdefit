@@ -43,7 +43,7 @@ module tdefit_data
     character*100, save, allocatable, dimension(:) :: filt_files
 
     ! Variables to store event data.
-    integer, save :: event_n
+    integer, save :: event_n, event_max_npts, event_max_blrpts
     integer, save :: cur_event, cur_npts, cur_blrpts
     integer, save, allocatable, dimension(:) :: event_npts, event_blrpts, event_nbest_bands
     real, save, allocatable, dimension(:) :: event_nh, event_claimed_z, event_min_aspin
@@ -227,7 +227,7 @@ module tdefit_data
     real, save :: annealvar
 
     ! Set which variables to maximize over and which to generate a table from.
-    integer :: nvars
+    integer, save :: nvars
     integer, save, allocatable, dimension(:) :: var_types, all_var_types, var_events
     character*50, save, allocatable, dimension(:) :: var_names, all_var_names
     real, save, allocatable, dimension(:) :: min_search, max_search

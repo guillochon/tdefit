@@ -29,7 +29,7 @@ else
 #	FCFLAGS = -u -r8 -i4 -O3 -fpp -unroll -mieee-fp
 #	FCFLAGS = -u -r8 -i4 -O3 -fpp -m64 -xAVX -axAVX #-profile-functions -profile-loops=all #-mieee-fp
 	FCFLAGS = -u -r8 -i4 -O3 -fpp -xSSE3 -unroll -mieee-fp
-#	FCFLAGS = -u -r8 -i4 -O3 -traceback -fpp -xSSE3 -unroll -mieee-fp
+	FCFLAGS = -u -r8 -i4 -O3 -traceback -fpp -xSSE3 -unroll -mieee-fp
 #	FCFLAGS = -u -r8 -i4 -O3 -pg -xSSE -fpp -unroll -mieee-fp
 #	FCFLAGS = -u -r8 -i4 -O0 -g -traceback -check all -fpp -warn all #-mieee-fp
 endif
@@ -117,6 +117,8 @@ ang_frac.o: tdefit_data.o constants.o tdefit_interface.o
 load_event.o: constants.o tdefit_data.o tdefit_interface.o
 
 magdev.o: bandmag.o set_trial_vars.o tdefit_data.o set_event.o
+
+tdefit_memory.o: tdefit_data.o
 
 init.o: constants.o tdefit_interface.o alambda.o qxgs.o least_sq.o tdefit_data.o load_defaults.o tdefit_util.o
 

@@ -29,7 +29,7 @@ else
 #	FCFLAGS = -u -r8 -i4 -O3 -fpp -unroll -mieee-fp
 #	FCFLAGS = -u -r8 -i4 -O3 -fpp -m64 -xAVX -axAVX #-profile-functions -profile-loops=all #-mieee-fp
 	FCFLAGS = -u -r8 -i4 -O3 -fpp -xSSE3 -unroll -mieee-fp
-	FCFLAGS = -u -r8 -i4 -O3 -traceback -fpp -xSSE3 -unroll -mieee-fp
+#	FCFLAGS = -u -r8 -i4 -O3 -traceback -fpp -xSSE3 -unroll -mieee-fp
 #	FCFLAGS = -u -r8 -i4 -O3 -pg -xSSE -fpp -unroll -mieee-fp
 #	FCFLAGS = -u -r8 -i4 -O0 -g -traceback -check all -fpp -warn all #-mieee-fp
 endif
@@ -103,7 +103,7 @@ amoeba_anneal.o: tdefit_util.o
 
 tdefit.o: init.o radius.o magdev.o dmdt.o bandmag.o sort2.o set_trial_vars.o \
           init_search_grid.o tdefit_data.o init_search_grid.o load_user_vars.o load_event.o \
-		  amoeba_anneal.o check_options.o set_event.o \
+		  amoeba_anneal.o check_options.o set_event.o tdefit_memory.o \
           print_trial_vars.o acor.o draw_random_walker.o
 
 draw_random_walker.o: tdefit_data.o tdefit_interface.o

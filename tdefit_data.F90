@@ -64,7 +64,7 @@ module tdefit_data
                                              trial_bh_rms, trial_rp, trial_toff, trial_rout, trial_rg, trial_gmh, trial_ms0, &
                                              trial_mh0, trial_rs0, trial_rsc, trial_alphhr, trial_eps_edd, trial_source_rv, &
                                              trial_magoff, trial_fcor, trial_tlimit, trial_ecor, trial_r_isco, trial_reprocess_temp, &
-                                             trial_offset_X1, trial_offset_X2, &
+                                             trial_offset_X1, trial_offset_X2, trial_mdot_floor, &
                                              trial_offset_GN, trial_offset_Pg, trial_offset_Pr, trial_offset_Pi, trial_offset_Pz, &
                                              trial_offset_U1, trial_offset_U2, trial_offset_RO, trial_offset_Ub, &
                                              trial_offset_Um, trial_offset_Uu, trial_offset_Uv, trial_offset_bV, &

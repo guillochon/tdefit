@@ -135,6 +135,8 @@ subroutine set_var(var, val)
             trial_variance(cur_event) = val
         case ("viscous_time")
             trial_viscous_time(cur_event) = val
+        case ("mdot_floor")
+            trial_mdot_floor(cur_event) = val
         !Non-trial vars
         case ("zscale")
             zscale = val

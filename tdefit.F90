@@ -35,8 +35,7 @@ program tdefit
                fn, wp, nwalkers_in, nvars_in, nburn_in, var_type_in, annealloc, mm, &
                pref_fail, w1, w2, nrejections, gnrejections, wchainl, wchainr, wchainn, &
                gdfcnt, gdffailcnt, gbbcnt, gbbfailcnt, gbbcalls, ninitfails, nstationary, ranj, &
-               nreplacements, gnreplacements, event_max_npts, event_max_blrpts, &
-               event_max_nbest_bands
+               nreplacements, gnreplacements
 
     !real, dimension(n_nhs) :: nhsrcs
     real, allocatable, dimension(:) :: praw, chi2raw, yraw, pcombinedraw, psend, chi2best_p, ybest_p, &
@@ -80,7 +79,7 @@ program tdefit
     seed_arr = (my_pe+1)*seed_arr
     call random_seed(put = seed_arr)
 
-    call init                                                                                   
+    call init
 
     if (mod(nwalkers, nchains) .ne. 0) then
         print*, 'Error: Number of walkers must be evenly divisible by number of chains'
@@ -89,177 +88,14 @@ program tdefit
 
     call MPI_BARRIER(MPI_COMM_WORLD, ierr)
 
-    open(unit = fn, file = "event_list.dat", status='old', action='read')
-    read(fn, *) event_n
-    allocate(event_blrpts(event_n))
-    allocate(event_claimed_z(event_n))
-    allocate(event_fnames(event_n))
-    allocate(event_min_aspin(event_n))
-    allocate(event_nbest_bands(event_n))
-    allocate(event_nh(event_n))
-    allocate(event_nhcorr(event_n))
-    allocate(event_npts(event_n))
-    allocate(event_restframe(event_n))
-    allocate(ll(event_n))
-    do e = 1, event_n
-        read(fn, *) event_fnames(e)
-    enddo
-    close(fn)
+    call tdefit_print('Loading events')
+    call load_events
 
-    allocate(trial_1pz(event_n))
-    allocate(trial_alphhr(event_n))
-    allocate(trial_aspin(event_n))
-    allocate(trial_beta(event_n))
-    allocate(trial_bh_rbs(event_n))
-    allocate(trial_bh_rms(event_n))
-    allocate(trial_blr_model(event_n))
-    allocate(trial_cap_at_edd(event_n))
-    allocate(trial_dl(event_n))
-    allocate(trial_ecor(event_n))
-    allocate(trial_eps_edd(event_n))
-    allocate(trial_exp_1(event_n))
-    allocate(trial_exp_2(event_n))
-    allocate(trial_exp_3(event_n))
-    allocate(trial_exp_4(event_n))
-    allocate(trial_fcor(event_n))
-    allocate(trial_fout(event_n))
-    allocate(trial_full_disk_coverage(event_n))
-    allocate(trial_gmh(event_n))
-    allocate(trial_ledd(event_n))
-    allocate(trial_magoff(event_n))
-    allocate(trial_mdot_floor(event_n))
-    allocate(trial_mh(event_n))
-    allocate(trial_mh0(event_n))
-    allocate(trial_model(event_n))
-    allocate(trial_ms(event_n))
-    allocate(trial_ms0(event_n))
-    allocate(trial_mu_e(event_n))
-    allocate(trial_nhsrc(event_n))
-    allocate(trial_object_type(event_n))
-    allocate(trial_offset_GN(event_n))
-    allocate(trial_offset_Pg(event_n))
-    allocate(trial_offset_Pi(event_n))
-    allocate(trial_offset_Pr(event_n))
-    allocate(trial_offset_Pz(event_n))
-    allocate(trial_offset_RO(event_n))
-    allocate(trial_offset_U1(event_n))
-    allocate(trial_offset_U2(event_n))
-    allocate(trial_offset_Ub(event_n))
-    allocate(trial_offset_Um(event_n))
-    allocate(trial_offset_Uu(event_n))
-    allocate(trial_offset_Uv(event_n))
-    allocate(trial_offset_X1(event_n))
-    allocate(trial_offset_X2(event_n))
-    allocate(trial_offset_bV(event_n))
-    allocate(trial_opacity(event_n))
-    allocate(trial_outflow_frac(event_n))
-    allocate(trial_outflow_model(event_n))
-    allocate(trial_phi(event_n))
-    allocate(trial_r_ibco(event_n))
-    allocate(trial_r_isco(event_n))
-    allocate(trial_reprocess_temp(event_n))
-    allocate(trial_rg(event_n))
-    allocate(trial_rout(event_n))
-    allocate(trial_rp(event_n))
-    allocate(trial_rphot(event_n))
-    allocate(trial_rs(event_n))
-    allocate(trial_rs0(event_n))
-    allocate(trial_rsc(event_n))
-    allocate(trial_simple_bb(event_n))
-    allocate(trial_source_rv(event_n))
-    allocate(trial_temp_mult(event_n))
-    allocate(trial_temperature_model(event_n))
-    allocate(trial_time_dep_rin(event_n))
-    allocate(trial_time_dep_rout(event_n))
-    allocate(trial_tlimit(event_n))
-    allocate(trial_toff(event_n))
-    allocate(trial_use_fcor(event_n))
-    allocate(trial_variability(event_n))
-    allocate(trial_variability2(event_n))
-    allocate(trial_variance(event_n))
-    allocate(trial_variance2(event_n))
-    allocate(trial_viscous_time(event_n))
-    allocate(trial_y1(event_n))
-    allocate(trial_y2(event_n))
-    allocate(trial_y3(event_n))
-    allocate(trial_yms(event_n))
-    allocate(trial_z(event_n))
     allocate(fat_best_fit(event_n))
     allocate(fat_most_probable(event_n))
 
-    call tdefit_print('Loading events')
-
-    event_npts = 0
-    event_blrpts = 0
-    do e = 1, event_n
-        call load_event(e,.true.)
-    enddo
-
-    event_max_npts = maxval(event_npts)
-    event_max_blrpts = maxval(event_blrpts)
-
-    allocate(event_bands(event_max_npts,event_n))
-    allocate(event_time_units(event_max_npts,event_n))
-    allocate(event_times(event_max_npts,event_n))
-    allocate(event_ABs(event_max_npts,event_n))
-    allocate(event_errs(event_max_npts,event_n))
-    allocate(event_devs(event_max_npts,event_n))
-    allocate(event_weights(event_max_npts,event_n))
-    allocate(event_penalties(event_max_npts,event_n))
-    allocate(event_types(event_max_npts,event_n))
-    allocate(event_blr_time_units(event_max_blrpts,event_n))
-    allocate(event_blr_times(event_max_blrpts,event_n))
-    allocate(event_blr_vels(event_max_blrpts,event_n))
-    allocate(event_blr_bands(event_max_blrpts,event_n))
-    allocate(event_blr_exists(event_max_blrpts,event_n))
-
-    allocate(trial_times(event_max_npts,event_n))
-    allocate(trial_fbs(event_max_npts,event_n))
-    allocate(trial_mdots(event_max_npts,event_n))
-    allocate(trial_menv(event_max_npts,event_n))
-    allocate(trial_routs(event_max_npts,event_n))
-    allocate(trial_rphots(event_max_npts,event_n))
-    allocate(trial_mags(event_max_npts,event_n))
-
-    nvars = 0
-    do e = 1, event_n
-        call load_event(e,.false.)
-        call set_event(e)
-        call load_defaults(1)
-        call load_user_vars(1)
-        cur => ll(e)%p
-        event_nbest_bands(e) = nextra_bands
-        do while (associated(cur))
-            event_nbest_bands(e) = event_nbest_bands(e) + 1
-            cur => cur%next
-        enddo
-    enddo
-
-    event_max_nbest_bands = maxval(event_nbest_bands)
-    allocate(event_best_bands(event_max_nbest_bands,event_n))
-
-    do e = 1, event_n
-        cur => ll(e)%p
-        i = 0
-        do while (associated(cur))
-            i = i + 1
-            event_best_bands(i,e) = cur%band
-            cur => cur%next
-        enddo
-    enddo
-
-    do e = 1, event_n
-        do i = 1, nextra_bands
-            event_best_bands(event_nbest_bands(e) - nextra_bands + i,e) = extra_bands(i)
-        enddo
-    enddo
-
-    if (sum(event_npts) .le. nvars - 1) then
-        print *, 'Warning: Number of measurement points must be +2 larger than ' // &
-                 'number of degrees of freedom for proper chi-square measurement.'
-    endif
-
-    reduced_chi2_const = 1.d0 / max(sum(event_npts) - nvars - 1 - count(var_types .eq. 2), 1)
+    reduced_chi2_const = 1.d0 / &
+        max(sum(event_npts) - nvars - 1 - count(var_types .eq. 2), 1)
 
     allocate(y(nmcsteps,nwalkers))
     allocate(chi2(nmcsteps,nwalkers))
@@ -1668,7 +1504,7 @@ program tdefit
         enddo
     enddo
 
-    call tdefit_deallocate()
+    call tdefit_deallocate
 
     call MPI_FINALIZE(ret_c)
 

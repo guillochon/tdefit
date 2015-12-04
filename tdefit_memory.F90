@@ -107,4 +107,4 @@ subroutine tdefit_deallocate
     deallocate(trial_y3)
     deallocate(trial_yms)
     deallocate(trial_z)
-end subroutine tdefit_deallocate
+end subroutine

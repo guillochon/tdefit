@@ -84,7 +84,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
     do j = 1, size(fbs)
         dftime = times(j)
         dffb = fbs(j)
-        dfmd = mdots(j)
+        dfmd = mdots(j) + trial_mdot_floor(cur_event)
 
         !!!! NOTE: NEED TO PASS ENVELOPE TO THIS function, INSTEAD OF RELYING ON GLOBALS
         dfenv = trial_menv(j,cur_event)

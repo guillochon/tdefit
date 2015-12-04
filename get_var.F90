@@ -156,6 +156,8 @@ function get_var(var) result(val)
             val = trial_variance(cur_event)
         case ("viscous_time")
             val = trial_viscous_time(cur_event)
+        case ("mdot_floor")
+            val = trial_mdot_floor(cur_event)
         ! Non-trial vars
         !   Logical vars
         case ("wind_phot")

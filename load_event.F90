@@ -51,8 +51,6 @@ subroutine load_event(e, prepare)
     blri = 0
     linedo: do
         read(fn, '(A500)', iostat=stat, size=nbuf, advance='no') buffer
-        if (stat .lt. 0) exit
-        if (stat .gt. 0) cycle
         if (is_iostat_eor(stat)) then
             j = 0
             loc = 1
@@ -158,6 +156,8 @@ subroutine load_event(e, prepare)
             endif
         elseif (is_iostat_end(stat)) then
             exit
+        else
+            cycle
         endif
     enddo linedo
 

@@ -20,7 +20,7 @@ program tdefit
                                 set_trial_vars, md_arr, annealydev, &
                                 set_derived_trial_vars, get_var, print_trial_vars, acor, &
                                 draw_random_walker, likelihood, load_defaults, &
-                                load_user_vars
+                                load_user_vars, tdefit_print
     use tdefit_util, only: amoeba_anneal
 #ifndef MPIH
     use mpi

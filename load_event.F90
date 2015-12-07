@@ -189,7 +189,7 @@ subroutine load_event(e, prepare)
 #include "tdefit.fpp"
     use tdefit_data
     use constants
-    use tdefit_interface, only: bbflux, obs_bb_func, get_band_type
+    use tdefit_interface, only: bbflux, obs_bb_func, get_band_type, tdefit_print
     use tdefit_util, only: sort2
 
 
@@ -198,9 +198,10 @@ subroutine load_event(e, prepare)
 
     integer                                 :: phoi, blri, nbuf, stat, begk, endk
     integer                                 :: loc, locspace, loctab, loccomma, loc2
+    integer                                 :: locbeginquote, locendquote
     integer                                 :: fn, i, j, bi, ei, band_count, version
     real                                    :: flux, first_time
-    logical                                 :: next_band
+    logical                                 :: next_band, begin_quote
     character*1                             :: band_type
     character*2                             :: cur_band
     character*50                            :: var_name, str_value
@@ -222,6 +223,7 @@ subroutine load_event(e, prepare)
     phoi = 0
     blri = 0
     linedo: do
+        buffer = ""
         read(fn, '(A500)', iostat=stat, size=nbuf, advance='no') buffer
         if (is_iostat_eor(stat)) then
             j = 0
@@ -229,7 +231,13 @@ subroutine load_event(e, prepare)
             locspace = 1
             loctab = 1
             loccomma = 1
-            do while(locspace .ne. 0 .or. loctab .ne. 0 .or. loccomma .ne. 0)
+            locbeginquote = 1
+            locendquote = 1
+
+            do while(loc .le. nbuf .and. &
+                     (locspace .ne. 0 .or. loctab .ne. 0 .or. &
+                      loccomma .ne. 0 .or. locbeginquote .ne. 0))
+
                 locspace = index(trim(buffer(loc:)), " ")
                 loctab = index(trim(buffer(loc:)), char(9))
                 loccomma = index(trim(buffer(loc:)), ",")
@@ -237,11 +245,32 @@ subroutine load_event(e, prepare)
                     loc = loc + 1
                     cycle
                 endif
+                locbeginquote = index(trim(buffer(loc:)), '"')
                 j = j + 1
-                if (locspace .eq. 0 .and. loctab .eq. 0 .and. loccomma .eq. 0) then
+                begin_quote = .false.
+                if (locbeginquote .eq. 1) then
+                    begin_quote = .true.
+                    loc = loc + 1
+                    begk = loc
+                    if (loc .le. nbuf) then
+                        locendquote = index(trim(buffer(loc:)), '"')
+                    else
+                        locendquote = 0
+                    endif
+                    if (locendquote .eq. 0) then
+                        call tdefit_print("Error, unclosed quote found in event file")
+                        call exit(0)
+                    elseif (locendquote .eq. 1) then
+                        call tdefit_print("Empty value detected in event file")
+                        call exit(0)
+                    endif
+                    endk = loc + locendquote - 2
+                    loc = loc + locendquote + 1
+                endif
+                if (locspace .eq. 0 .and. loctab .eq. 0 .and. loccomma .eq. 0 .and. locbeginquote .eq. 0) then
                     begk = loc
                     endk = nbuf
-                else
+                elseif (.not. begin_quote) then
                     loc2 = minval( (/ locspace, loctab, loccomma /), &
                         mask = (/ locspace, loctab, loccomma /) .ne. 0)
                     begk = loc
@@ -252,6 +281,12 @@ subroutine load_event(e, prepare)
                 if (j .eq. 1) then
                     var_name = ''
                     read(buffer(begk:endk),*) var_name
+                    select case (trim(var_name))
+                        case ('photometry', 'broad_line', 'redshift', 'nh', &
+                              'nhcorr', 'restframe')
+                        case default
+                            cycle linedo
+                    end select
                 else
                     select case (trim(var_name))
                         case ('photometry')

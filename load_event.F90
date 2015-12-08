@@ -350,15 +350,22 @@ subroutine load_event(e, prepare)
                     end select
                 endif
             enddo
-            if (.not. prepare) then
+            if (.not. prepare .and. my_pe .eq. 0) then
+                write(*,'(A15,X)',advance='no') var_name
                 select case (trim(var_name))
                     case ('photometry')
-                        if (my_pe .eq. 0) then
-                            write(*,'(A15,X,A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I1)') &
-                                var_name, event_time_units(phoi,e), event_times(phoi,e), &
-                                event_bands(phoi,e), event_ABs(phoi,e), event_errs(phoi,e), &
-                                event_types(phoi,e)
-                        endif
+                        write(*,'(A3,X,E10.3,X,A2,X,E10.3,X,E10.3,X,I1)') &
+                            event_time_units(phoi,e), event_times(phoi,e), &
+                            event_bands(phoi,e), event_ABs(phoi,e), event_errs(phoi,e), &
+                            event_types(phoi,e)
+                    case ('redshift')
+                        write(*,'(E10.3)') event_claimed_z(e)
+                    case ('nh')
+                        write(*,'(E10.3)') event_nh(e)
+                    case ('nhcorr')
+                        write(*,'(L1)') event_nhcorr(e)
+                    case ('restframe')
+                        write(*,'(L1)') event_restframe(e)
                 end select
             endif
         elseif (is_iostat_end(stat)) then

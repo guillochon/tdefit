@@ -59,6 +59,8 @@ function dffunc(bbfunc, lr) result(flux)
 
     flux = 0.d0
 
+    if (dfmd .le. 0.d0) return
+
     !if (r .gt. trial_rp(cur_event)) then
     !    temp = (dfmd*2.d0*G*trial_ms(cur_event)/trial_rs(cur_event)/(pi_sigma_b*trial_rp(cur_event)*trial_rs(cur_event)))**(0.25d0)!*&
     !        !(r/trial_rp(cur_event))**(-0.75d0)

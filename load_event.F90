@@ -400,15 +400,11 @@ subroutine load_event(e, prepare)
         endif
     enddo
 
-    first_time = minval(event_times(:,e))
-    event_times(:,e) = event_times(:,e) - first_time
-    event_blr_times(:,e) = event_blr_times(:,e) - first_time
-
     do i = 1, event_npts(e)
         if (event_time_units(i,e) == 'MJD' .or. trim(event_time_units(i,e)) == 'JD') then
             event_times(i,e) = event_times(i,e)*day
             if (trim(event_time_units(i,e)) == 'JD') then
-                event_times(i,e) = event_times(i,e) - 2400000.5
+                event_times(i,e) = event_times(i,e) - 2400000.5*day
             endif
         elseif (event_time_units(i,e) == 'yrs') then
             event_times(i,e) = event_times(i,e)*yr
@@ -422,7 +418,7 @@ subroutine load_event(e, prepare)
         if (event_blr_time_units(i,e) == 'MJD' .or. trim(event_blr_time_units(i,e)) == 'JD') then
             event_blr_times(i,e) = event_blr_times(i,e)*day
             if (trim(event_blr_time_units(i,e)) == 'JD') then
-                event_blr_times(i,e) = event_blr_times(i,e) - 2400000.5
+                event_blr_times(i,e) = event_blr_times(i,e) - 2400000.5*day
             endif
         elseif (event_blr_time_units(i,e) == 'yrs') then
             event_blr_times(i,e) = event_blr_times(i,e)*yr
@@ -431,6 +427,10 @@ subroutine load_event(e, prepare)
             call exit(0)
         endif
     enddo
+
+    first_time = minval(event_times(:,e))
+    event_times(:,e) = event_times(:,e) - first_time
+    event_blr_times(:,e) = event_blr_times(:,e) - first_time
 
     if (event_restframe(e)) then
         event_times(:,e) = event_times(:,e)*(1.d0 + event_claimed_z(e)) ! Redshift stretches events in time, need to remove to get actual time-evolution.

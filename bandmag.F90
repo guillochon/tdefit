@@ -341,33 +341,19 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
             sed_index = sed_index + 1
         endif
 
-        if (include_disk) then
-            select case (reprocess_model)
-                case (RM_CLOUDS)
-                    teff = (reprocessed_lum/(fourpi_sigma_b*df_rphot**2))**0.25d0
-                    if (teff .ne. 0.d0) then
-                        if (restframe_mode) then
-                            mags(j) = mags(j) + fourpi*df_rphot**2*&
-                                bbflux(src_bb_func, dfband, teff, trial_z(cur_event), event_nh(cur_event), trial_nhsrc(cur_event))
-                        else
-                            mags(j) = mags(j) + fourpi*df_rphot**2*&
-                                bbflux(obs_bb_func, dfband, teff, trial_z(cur_event), event_nh(cur_event), trial_nhsrc(cur_event))
-                        endif
+        select case (reprocess_model)
+            case (RM_CLOUDS)
+                teff = (reprocessed_lum/(fourpi_sigma_b*df_rphot**2))**0.25d0
+                if (teff .ne. 0.d0) then
+                    if (restframe_mode) then
+                        mags(j) = mags(j) + fourpi*df_rphot**2*&
+                            bbflux(src_bb_func, dfband, teff, trial_z(cur_event), event_nh(cur_event), trial_nhsrc(cur_event))
+                    else
+                        mags(j) = mags(j) + fourpi*df_rphot**2*&
+                            bbflux(obs_bb_func, dfband, teff, trial_z(cur_event), event_nh(cur_event), trial_nhsrc(cur_event))
                     endif
-            end select
-        else
-            teff = (trial_eps_edd(cur_event)*dffb*c2*(trial_r_isco(cur_event)/dfri)**3/(fourpi_sigma_b*df_rphot**2))**0.25d0
-
-            if (restframe_mode) then
-                if (dfcovering .gt. 0.d0) then
-                    mags(j) = mags(j) + fourpi*dfcovering*incl_corr*df_rphot**2*bbflux(src_bb_func, dfband, teff, trial_z(cur_event), event_nh(cur_event), trial_nhsrc(cur_event))
                 endif
-            else
-                if (dfcovering .gt. 0.d0) then
-                    mags(j) = mags(j) + fourpi*dfcovering*incl_corr*df_rphot**2*bbflux(obs_bb_func, dfband, teff, trial_z(cur_event), event_nh(cur_event), trial_nhsrc(cur_event))
-                endif
-            endif
-        endif
+        end select
 
         if (include_disk) then
             do i = 1, n_zones

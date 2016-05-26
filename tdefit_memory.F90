@@ -74,6 +74,7 @@ subroutine tdefit_deallocate
     deallocate(trial_offset_X1)
     deallocate(trial_offset_X2)
     deallocate(trial_offset_bV)
+    deallocate(trial_offset_bI)
     deallocate(trial_opacity)
     deallocate(trial_outflow_frac)
     deallocate(trial_outflow_model)

@@ -67,7 +67,7 @@ module tdefit_data
                                              trial_offset_X1, trial_offset_X2, trial_mdot_floor, &
                                              trial_offset_GN, trial_offset_Pg, trial_offset_Pr, trial_offset_Pi, trial_offset_Pz, &
                                              trial_offset_U1, trial_offset_U2, trial_offset_RO, trial_offset_Ub, &
-                                             trial_offset_Um, trial_offset_Uu, trial_offset_Uv, trial_offset_bV, &
+                                             trial_offset_Um, trial_offset_Uu, trial_offset_Uv, trial_offset_bV, trial_offset_bI, &
                                              trial_fout, trial_mu_e, trial_ledd, trial_outflow_frac, trial_bh_rbs, trial_r_ibco, &
                                              trial_temp_mult, trial_z, trial_dl, trial_exp_1, trial_exp_2, trial_exp_3, trial_exp_4, &
                                              trial_variability, trial_variance, trial_variability2, trial_variance2, &

@@ -117,6 +117,8 @@ subroutine set_var(var, val)
             trial_offset_Uv(cur_event) = val
         case ("offset_bV")
             trial_offset_bV(cur_event) = val
+        case ("offset_bI")
+            trial_offset_bI(cur_event) = val
         case ("temp_mult")
             trial_temp_mult(cur_event) = val
         case ("z")

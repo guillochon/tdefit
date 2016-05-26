@@ -104,6 +104,7 @@ subroutine load_events
     allocate(trial_offset_X1(event_n))
     allocate(trial_offset_X2(event_n))
     allocate(trial_offset_bV(event_n))
+    allocate(trial_offset_bI(event_n))
     allocate(trial_opacity(event_n))
     allocate(trial_outflow_frac(event_n))
     allocate(trial_outflow_model(event_n))

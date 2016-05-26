@@ -488,6 +488,9 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
     where (bands .eq. 'bV')
         mags = mags + trial_offset_bV(cur_event)
     endwhere
+    where (bands .eq. 'bI')
+        mags = mags + trial_offset_bI(cur_event)
+    endwhere
 
     if (print_max_disk) then
         print *, 'dfmaxdisktemp', dfmaxdisktemp

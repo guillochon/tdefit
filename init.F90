@@ -842,7 +842,7 @@ subroutine init
     fitz_nspl = 9
 
     call tdefit_print('Finished initialization.')
-    print *, 'Version ', VERSION, ', my_pe', my_pe
+    write(*, *) 'Version ', VERSION, ', my_pe', my_pe
     call MPI_BARRIER(MPI_COMM_WORLD, ierr)
 end subroutine
 

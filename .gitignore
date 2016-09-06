@@ -1,1 +1,6 @@
+.DS_Store
 events/*
+*.o
+*.mod
+tdefit
+version.fpp

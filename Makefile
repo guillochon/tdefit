@@ -10,7 +10,7 @@ endif
 
 compiler = $(shell basename $(shell ${FC} -show | cut -d " " -f1))
 
-tip=$(shell hg tip --template '{rev}')
+tip=$(shell git log --pretty=format:'%h' -n 1)
 
 ifeq (${compiler},gfortran)
 	GFORT = yes
@@ -157,7 +157,7 @@ write_vars.o: tdefit_interface.o
 all: tdefit
 
 version.fpp:
-	@echo '#define VERSION $(tip)' > $@
+	@echo '#define VERSION "$(tip)"' > $@
 
 %.mod: %.h
 

@@ -10,7 +10,7 @@ endif
 
 compiler = $(shell basename $(shell ${FC} -show | cut -d " " -f1))
 
-tip=$(shell git log -n 1  --pretty=format:"%H")
+tip=$(shell git log --pretty=format:'%h' -n 1)
 
 ifeq (${compiler},gfortran)
 	GFORT = yes

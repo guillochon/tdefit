@@ -99,7 +99,8 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
         endif
 
         if (trial_time_dep_rin(cur_event)) then
-            dfri = trial_rin(cur_event)*max(tworp**3 - 4.5d0*trial_gmh(cur_event)*(max(dftime - first_accretion_time, 0.d0)*trial_alphhr(cur_event))**2, trial_r_isco(cur_event)**3)**one_th
+            dfri = max(trial_rin(cur_event)*trial_r_isco(cur_event), &
+                max(tworp**3 - 4.5d0*trial_gmh(cur_event)*(max(dftime - first_accretion_time, 0.d0)*trial_alphhr(cur_event))**2, trial_r_isco(cur_event)**3)**one_th)
         else
             dfri = trial_rin(cur_event)*trial_r_isco(cur_event)
         endif

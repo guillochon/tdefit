@@ -13,7 +13,7 @@
 !You should have received a copy of the GNU General Public License
 !along with TDEFit.  If not, see <http://www.gnu.org/licenses/>.
 
-subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
+subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphots)
     use tdefit_data
     use constants
     use tdefit_interface, ONLY: ftoABmag, obs_df_func, src_df_func, disk_temp_root, bbflux, trapezoid, &
@@ -29,7 +29,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
     character*2, dimension(:), intent(in) :: bands
     real, dimension(size(fbs)), intent(out) :: mags
     integer, dimension(size(fbs)), intent(out) :: penalties
-    real, dimension(size(fbs)), intent(out), optional :: routs, rphots
+    real, dimension(size(fbs)), intent(out), optional :: rins, routs, rphots
 
     integer :: i, j, k, neval, ierr, n_zones, bi, ei
     real :: penalty, err, tworp, mag, error, zmin, zmax, reprocessed_lum, &
@@ -48,6 +48,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
 
     teff = 0.d0
 
+    if (present(rins)) rins = 0.d0
     if (present(routs)) routs = 0.d0
     if (present(rphots)) rphots = 0.d0
 
@@ -98,9 +99,9 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
         endif
 
         if (trial_time_dep_rin(cur_event)) then
-            dfri = max(tworp**3 - 4.5d0*trial_gmh(cur_event)*(max(dftime - first_accretion_time, 0.d0)*trial_alphhr(cur_event))**2, trial_r_isco(cur_event)**3)**one_th
+            dfri = trial_rin(cur_event)*max(tworp**3 - 4.5d0*trial_gmh(cur_event)*(max(dftime - first_accretion_time, 0.d0)*trial_alphhr(cur_event))**2, trial_r_isco(cur_event)**3)**one_th
         else
-            dfri = trial_r_isco(cur_event)
+            dfri = trial_rin(cur_event)*trial_r_isco(cur_event)
         endif
 
         if (trial_time_dep_rout(cur_event)) then
@@ -217,6 +218,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
             !endif
         endif
 
+        if (present(rins)) rins(j) = dfri
         if (present(routs)) routs(j) = dfro
         if (present(rphots)) rphots(j) = df_rphot
 

@@ -228,14 +228,14 @@ module tdefit_interface
             real, dimension(size(f)) :: ab
         end function
 
-        subroutine bandmag(times, fbs, mdots, bands, mags, penalties, routs, rphots)
+        subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphots)
             real, dimension(:), intent(in) :: times
             real, dimension(:), intent(in) :: fbs
             real, dimension(:), intent(in) :: mdots
             character*2, dimension(:), intent(in) :: bands
             real, dimension(size(mdots)), intent(out) :: mags
             integer, dimension(size(mdots)), intent(out) :: penalties
-            real, dimension(size(mdots)), intent(out), optional :: routs, rphots
+            real, dimension(size(mdots)), intent(out), optional :: rins, routs, rphots
         end subroutine
 
         function radius(m) result(r)

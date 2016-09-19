@@ -1,1 +1,9 @@
 events/*
+*.o
+*.swp
+*.mod
+tdefit
+version.fpp
+.DS_Store
+*__genmod*
+dmdts/*

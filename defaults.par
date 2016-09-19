@@ -97,6 +97,7 @@ outflow_frac			   2 1 0.d0
 outflow_model			   1 1 0
 phi						   2 1 0.d0
 reprocess_temp			   2 1 0.d0
+rin						   2 1 1.d0
 rout					   2 1 1.d0
 rphot					   2 1 1.d0
 rsc						   2 1 1.d0

@@ -72,7 +72,7 @@ module tdefit_data
                                              trial_temp_mult, trial_z, trial_dl, trial_exp_1, trial_exp_2, trial_exp_3, trial_exp_4, &
                                              trial_variability, trial_variance, trial_variability2, trial_variance2, &
                                              trial_opacity, trial_rphot, trial_yms, trial_y1, trial_y2, trial_y3, &
-                                             trial_1pz, trial_viscous_time
+                                             trial_1pz, trial_viscous_time, trial_rin
     integer, save, allocatable, dimension(:) :: trial_model
     integer, save, allocatable, dimension(:) :: trial_outflow_model, trial_object_type, trial_temperature_model, trial_blr_model
     logical, save, allocatable, dimension(:) :: trial_time_dep_rin
@@ -84,7 +84,7 @@ module tdefit_data
 
     real, save, allocatable, dimension(:,:) :: trial_mags, trial_fbs, trial_times, &
                                                trial_menv, trial_routs, trial_rphots, &
-                                               trial_mdots
+                                               trial_mdots, trial_rins
 
     !integer, parameter :: nTs = 40, nnhs = 4, nzs = 20
     !real, parameter :: minT = 1.d3, maxT = 1.d8

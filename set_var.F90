@@ -27,6 +27,8 @@ subroutine set_var(var, val)
             trial_toff(cur_event) = val
         case ("nhsrc")
             trial_nhsrc(cur_event) = val
+        case ("rin")
+            trial_rin(cur_event) = val
         case ("rout")
             trial_rout(cur_event) = val
         case ("aspin")

@@ -131,13 +131,15 @@ program tdefit
 
     if (preferred_mode) then
         open(unit = fn, file = trim(event_fnames(e)) // "_preferred.dat", status='old', action='read')
-        read(fn,*) pref_dev, trial_toff(cur_event), trial_nhsrc(cur_event), trial_rout(cur_event), trial_aspin(cur_event), trial_phi(cur_event), trial_beta(cur_event), &
+        read(fn,*) pref_dev, trial_toff(cur_event), trial_nhsrc(cur_event), trial_rin(cur_event), &
+            trial_rout(cur_event), trial_aspin(cur_event), trial_phi(cur_event), trial_beta(cur_event), &
             trial_mh(cur_event), trial_ms(cur_event), trial_rsc(cur_event), trial_alphhr(cur_event)
         pref_fail = 0
         close(fn)
 
         call set_derived_trial_vars
-        write(*, *), pref_dev, trial_toff(cur_event), trial_nhsrc(cur_event), trial_rout(cur_event), trial_aspin(cur_event), trial_phi(cur_event), trial_beta(cur_event), &
+        write(*, *), pref_dev, trial_toff(cur_event), trial_nhsrc(cur_event), trial_rin(cur_event), &
+            trial_rout(cur_event), trial_aspin(cur_event), trial_phi(cur_event), trial_beta(cur_event), &
             trial_mh(cur_event), trial_ms(cur_event), trial_rsc(cur_event), trial_alphhr(cur_event)
     else
         modelcnt = 0
@@ -1019,6 +1021,7 @@ program tdefit
             trial_fbs(:cur_npts,cur_event) = 0.d0
             trial_mdots(:cur_npts,cur_event) = 0.d0
             trial_mags(:cur_npts,cur_event) = 0.d0
+            trial_rins(:cur_npts,cur_event) = 0.d0
             trial_routs(:cur_npts,cur_event) = 0.d0
             trial_rphots(:cur_npts,cur_event) = 0.d0
             trial_times(:cur_npts,cur_event) = event_times(:cur_npts,cur_event) / trial_1pz(cur_event)
@@ -1028,7 +1031,8 @@ program tdefit
                       .true., trial_menv(:cur_npts,cur_event))
             call bandmag(trial_times(:cur_npts,cur_event) + trial_toff(cur_event), trial_fbs(:cur_npts,cur_event), &
                          trial_mdots(:cur_npts,cur_event), event_bands(:cur_npts,cur_event), &
-                         trial_mags(:cur_npts,cur_event), event_penalties(:cur_npts,cur_event), trial_routs(:cur_npts,cur_event), trial_rphots(:cur_npts,cur_event))
+                         trial_mags(:cur_npts,cur_event), event_penalties(:cur_npts,cur_event), trial_rins(:cur_npts,cur_event), &
+                         trial_routs(:cur_npts,cur_event), trial_rphots(:cur_npts,cur_event))
             fat_best_fit(cur_event) = first_accretion_time
             if (output_restframe) then
                 trial_mags(:cur_npts,cur_event) = trial_mags(:cur_npts,cur_event) - mag_fac*dlog10(trial_1pz(cur_event))
@@ -1063,6 +1067,7 @@ program tdefit
             write(fn,'('//trim(str)//'I2)') (event_types(i,cur_event),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (dsqrt(event_errs(i,cur_event)),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (trial_mags(i,cur_event),i=1,cur_npts)
+            write(fn,'('//trim(str)//'G17.8E3)') (trial_rins(i,cur_event),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (trial_routs(i,cur_event),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (trial_rphots(i,cur_event),i=1,cur_npts)
 
@@ -1076,6 +1081,7 @@ program tdefit
             trial_fbs(:cur_npts,cur_event) = 0.d0
             trial_mdots(:cur_npts,cur_event) = 0.d0
             trial_mags(:cur_npts,cur_event) = 0.d0
+            trial_rins(:cur_npts,cur_event) = 0.d0
             trial_routs(:cur_npts,cur_event) = 0.d0
             trial_rphots(:cur_npts,cur_event) = 0.d0
             trial_times(:cur_npts,cur_event) = event_times(:cur_npts,cur_event) / trial_1pz(cur_event)
@@ -1085,7 +1091,8 @@ program tdefit
                       .true., trial_menv(:cur_npts,cur_event))
             call bandmag(trial_times(:cur_npts,cur_event) + trial_toff(cur_event), trial_fbs(:cur_npts,cur_event), &
                          trial_mdots(:cur_npts,cur_event), event_bands(:cur_npts,cur_event), &
-                         trial_mags(:cur_npts,cur_event), event_penalties(:cur_npts,cur_event), trial_routs(:cur_npts,cur_event), trial_rphots(:cur_npts,cur_event))
+                         trial_mags(:cur_npts,cur_event), event_penalties(:cur_npts,cur_event), trial_rins(:cur_npts,cur_event), &
+                         trial_routs(:cur_npts,cur_event), trial_rphots(:cur_npts,cur_event))
             fat_most_probable(cur_event) = first_accretion_time
             if (output_restframe) then
                 trial_mags(:cur_npts,cur_event) = trial_mags(:cur_npts,cur_event) - mag_fac*dlog10(trial_1pz(cur_event))
@@ -1120,6 +1127,7 @@ program tdefit
             write(fn,'('//trim(str)//'I2)') (event_types(i,cur_event),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (dsqrt(event_errs(i,cur_event)),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (trial_mags(i,cur_event),i=1,cur_npts)
+            write(fn,'('//trim(str)//'G17.8E3)') (trial_rins(i,cur_event),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (trial_routs(i,cur_event),i=1,cur_npts)
             write(fn,'('//trim(str)//'G17.8E3)') (trial_rphots(i,cur_event),i=1,cur_npts)
 
@@ -1200,6 +1208,7 @@ program tdefit
         deallocate(trial_fbs)
         deallocate(trial_mdots)
         deallocate(trial_menv)
+        deallocate(trial_rins)
         deallocate(trial_routs)
         deallocate(trial_rphots)
         deallocate(trial_mags)
@@ -1224,6 +1233,7 @@ program tdefit
             allocate(trial_fbs(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_mdots(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_menv(nbest_times*event_nbest_bands(cur_event),e:e))
+            allocate(trial_rins(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_routs(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_rphots(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_mags(nbest_times*event_nbest_bands(cur_event),e:e))
@@ -1253,6 +1263,7 @@ program tdefit
 
             trial_fbs(:,cur_event) = 0.d0
             trial_mdots(:,cur_event) = 0.d0
+            trial_rins(:,cur_event) = 0.d0
             trial_routs(:,cur_event) = 0.d0
             trial_rphots(:,cur_event) = 0.d0
             trial_mags(:,cur_event) = 0.d0
@@ -1260,7 +1271,7 @@ program tdefit
             call dmdt(trial_times(:,cur_event), trial_mdots(:,cur_event), .true., trial_menv(:,cur_event))
             call bandmag(trial_times(:,cur_event), trial_fbs(:,cur_event), trial_mdots(:,cur_event), &
                          event_bands(:,cur_event), trial_mags(:,cur_event), event_penalties(:,cur_event), &
-                         trial_routs(:,cur_event), trial_rphots(:,cur_event))
+                         trial_rins(:,cur_event), trial_routs(:,cur_event), trial_rphots(:,cur_event))
             if (output_restframe) then
                 trial_mags(:,cur_event) = trial_mags(:,cur_event) - mag_fac*dlog10(trial_1pz(cur_event))
             endif
@@ -1271,6 +1282,7 @@ program tdefit
             write(fn,'('//trim(str)//'G17.8E3)') (trial_fbs(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_mdots(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_mags(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
+            write(fn,'('//trim(str)//'G17.8E3)') (trial_rins(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_routs(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_rphots(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
 
@@ -1288,6 +1300,7 @@ program tdefit
             deallocate(trial_fbs)
             deallocate(trial_mdots)
             deallocate(trial_menv)
+            deallocate(trial_rins)
             deallocate(trial_routs)
             deallocate(trial_rphots)
             deallocate(trial_mags)
@@ -1309,6 +1322,7 @@ program tdefit
             allocate(trial_fbs(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_mdots(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_menv(nbest_times*event_nbest_bands(cur_event),e:e))
+            allocate(trial_rins(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_routs(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_rphots(nbest_times*event_nbest_bands(cur_event),e:e))
             allocate(trial_mags(nbest_times*event_nbest_bands(cur_event),e:e))
@@ -1337,6 +1351,7 @@ program tdefit
 
             trial_fbs(:,cur_event) = 0.d0
             trial_mdots(:,cur_event) = 0.d0
+            trial_rins(:,cur_event) = 0.d0
             trial_routs(:,cur_event) = 0.d0
             trial_rphots(:,cur_event) = 0.d0
             trial_mags(:,cur_event) = 0.d0
@@ -1344,7 +1359,8 @@ program tdefit
             call dmdt(trial_times(:,cur_event), trial_mdots(:,cur_event), .true., trial_menv(:,cur_event))
             call bandmag(trial_times(:,cur_event), trial_fbs(:,cur_event), trial_mdots(:,cur_event), &
                          event_bands(:,cur_event), trial_mags(:,cur_event), &
-                         event_penalties(:,cur_event), trial_routs(:,cur_event), trial_rphots(:,cur_event))
+                         event_penalties(:,cur_event), trial_rins(:, cur_event), trial_routs(:,cur_event), &
+                         trial_rphots(:,cur_event))
             if (output_restframe) then
                 trial_mags(:,cur_event) = trial_mags(:,cur_event) - mag_fac*dlog10(trial_1pz(cur_event))
             endif
@@ -1355,6 +1371,7 @@ program tdefit
             write(fn,'('//trim(str)//'G17.8E3)') (trial_fbs(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_mdots(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_mags(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
+            write(fn,'('//trim(str)//'G17.8E3)') (trial_rins(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_routs(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
             write(fn,'('//trim(str)//'G17.8E3)') (trial_rphots(i,cur_event),i=1,nbest_times*event_nbest_bands(cur_event))
 
@@ -1372,6 +1389,7 @@ program tdefit
             deallocate(trial_fbs)
             deallocate(trial_mdots)
             deallocate(trial_menv)
+            deallocate(trial_rins)
             deallocate(trial_routs)
             deallocate(trial_rphots)
             deallocate(trial_mags)
@@ -1405,6 +1423,7 @@ program tdefit
                 allocate(trial_fbs(nbest_times*event_nbest_bands(cur_event),e:e))
                 allocate(trial_mdots(nbest_times*event_nbest_bands(cur_event),e:e))
                 allocate(trial_menv(nbest_times*event_nbest_bands(cur_event),e:e))
+                allocate(trial_rins(nbest_times*event_nbest_bands(cur_event),e:e))
                 allocate(trial_routs(nbest_times*event_nbest_bands(cur_event),e:e))
                 allocate(trial_rphots(nbest_times*event_nbest_bands(cur_event),e:e))
                 allocate(trial_mags(nbest_times*event_nbest_bands(cur_event),e:e))
@@ -1450,13 +1469,15 @@ program tdefit
                     trial_fbs(:,cur_event) = 0.d0
                     trial_mdots(:,cur_event) = 0.d0
                     trial_mags(:,cur_event) = 0.d0
+                    trial_rins(:,cur_event) = 0.d0
                     trial_routs(:,cur_event) = 0.d0
                     trial_rphots(:,cur_event) = 0.d0
                     call dmdt(trial_times(:,cur_event), trial_fbs(:,cur_event), .false., trial_menv(:,cur_event))
                     call dmdt(trial_times(:,cur_event), trial_mdots(:,cur_event), .true., trial_menv(:,cur_event))
                     call bandmag(trial_times(:,cur_event), trial_fbs(:,cur_event), trial_mdots(:,cur_event), &
                                  event_bands(:,cur_event), trial_mags(:,cur_event), &
-                                 event_penalties(:,cur_event), trial_routs(:,cur_event), trial_rphots(:,cur_event))
+                                 event_penalties(:,cur_event), trial_rins(:,cur_event), trial_routs(:,cur_event), &
+                                 trial_rphots(:,cur_event))
                     if (output_restframe) then
                         trial_mags(:,cur_event) = trial_mags(:,cur_event) - mag_fac*dlog10(trial_1pz(cur_event))
                     endif
@@ -1469,6 +1490,7 @@ program tdefit
                     write(fn) trial_fbs(:,cur_event)
                     write(fn) trial_mdots(:,cur_event)
                     write(fn) trial_mags(:,cur_event)
+                    write(fn) trial_rins(:,cur_event)
                     write(fn) trial_routs(:,cur_event)
                     write(fn) trial_rphots(:,cur_event)
                 enddo
@@ -1481,6 +1503,7 @@ program tdefit
                 deallocate(trial_fbs)
                 deallocate(trial_mdots)
                 deallocate(trial_menv)
+                deallocate(trial_rins)
                 deallocate(trial_routs)
                 deallocate(trial_rphots)
                 deallocate(trial_mags)

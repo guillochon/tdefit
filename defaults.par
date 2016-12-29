@@ -62,6 +62,7 @@ aspin					   2 1 0.d0
 beta					   2 1 1.d0
 blr_model				   1 1 0
 cap_at_edd				   0 1 T
+log_above_edd			   0 1 T
 ecor					   2 1 0.d0
 exp_1					   2 1 0.0d0
 exp_2					   2 1 0.0d0

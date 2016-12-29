@@ -66,6 +66,7 @@ subroutine load_events
     allocate(trial_bh_rbs(event_n))
     allocate(trial_bh_rms(event_n))
     allocate(trial_blr_model(event_n))
+    allocate(trial_log_above_edd(event_n))
     allocate(trial_cap_at_edd(event_n))
     allocate(trial_dl(event_n))
     allocate(trial_ecor(event_n))

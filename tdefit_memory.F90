@@ -37,6 +37,7 @@ subroutine tdefit_deallocate
     deallocate(trial_bh_rms)
     deallocate(trial_blr_model)
     deallocate(trial_cap_at_edd)
+    deallocate(trial_log_above_edd)
     deallocate(trial_dl)
     deallocate(trial_ecor)
     deallocate(trial_eps_edd)

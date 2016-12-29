@@ -86,6 +86,12 @@ function get_var(var) result(val)
             else
                 val = 0.d0
             endif
+        case ("log_above_edd")
+            if (trial_log_above_edd(cur_event)) then
+                val = 1.d0
+            else
+                val = 0.d0
+            endif
         case ("cap_at_edd")
             if (trial_cap_at_edd(cur_event)) then
                 val = 1.d0

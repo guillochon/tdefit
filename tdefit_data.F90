@@ -80,6 +80,7 @@ module tdefit_data
     logical, save, allocatable, dimension(:) :: trial_simple_bb
     logical, save, allocatable, dimension(:) :: trial_use_fcor
     logical, save, allocatable, dimension(:) :: trial_cap_at_edd
+    logical, save, allocatable, dimension(:) :: trial_log_above_edd
     logical, save, allocatable, dimension(:) :: trial_full_disk_coverage
 
     real, save, allocatable, dimension(:,:) :: trial_mags, trial_fbs, trial_times, &

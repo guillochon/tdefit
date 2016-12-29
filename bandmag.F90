@@ -156,7 +156,11 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
             ! temperature if total is exceeded.
 
             if (total_lum .gt. trial_ledd(cur_event)) then
-                df_temp_mult = (trial_ledd(cur_event)/total_lum)**0.25d0
+                if (trial_log_above_edd(cur_event)) then
+                    df_temp_mult = (1.0 + dlog((total_lum/trial_ledd(cur_event))))**(-0.25d0)
+                else
+                    df_temp_mult = (trial_ledd(cur_event)/total_lum)**0.25d0
+                endif
             endif
         endif
 

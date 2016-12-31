@@ -442,8 +442,12 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
         mags = penalty*ftoABmag(mags)
     endwhere
 
-    where (band_types .eq. 'l' .or. band_types .eq. 'X')
+    where (band_types .eq. 'X')
         mags = penalty*ftomag(mags)
+    endwhere
+
+    where (band_types .eq. 'L')
+        mags = penalty*dlog10(mags)
     endwhere
 
     where ((mags .ge. huge(1.d0) .or. mags .ne. mags) .and. fbs .ne. 0.d0)

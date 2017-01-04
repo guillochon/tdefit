@@ -139,7 +139,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
         if (include_disk) then
             make_sed = .false.
             dfreprocess = .false.
-            dfband = 'Lb'
+            dfband = 'Ls'
 
             do i = 1, n_zones
                 ierr = 0
@@ -282,7 +282,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
         if (include_disk) then
             make_sed = .false.
             dfreprocess = .false.
-            dfband = 'Lb'
+            dfband = 'Ls'
 
             do i = 1, n_zones
                 ierr = 0
@@ -344,7 +344,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
 
         dfband = bands(j)
 
-        if (produce_seds .and. dfband .eq. 'Lb') then
+        if (produce_seds .and. dfband .eq. 'Ls') then
             sed_index = sed_index + 1
         endif
 
@@ -377,7 +377,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
                     call integrate_df(obs_df_func, zmin, zmax, mag)
                 endif
 
-                if (produce_seds .and. dfband .eq. 'Lb') then
+                if (produce_seds .and. dfband .eq. 'Ls') then
                     ! Simple trapezoid, but for an array
                     coeff = (zmax - zmin)/(dble(sed_divs) - 1.d0) 
                     make_sed = .true.
@@ -406,7 +406,7 @@ subroutine bandmag(times, fbs, mdots, bands, mags, penalties, rins, routs, rphot
             enddo
         endif
 
-        if (produce_seds .and. dfband .eq. 'Lb') then
+        if (produce_seds .and. dfband .eq. 'Ls') then
             if (include_disk) sed_table(2,sed_index,:) = sed_table(2,sed_index,:)*incl_corr
             if (.not. include_disk) then
                 if (dfcovering .gt. 0.d0) then

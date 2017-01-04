@@ -43,7 +43,7 @@ function bbflux(bbfunc, band, T, z, nh, nhsrc) result(flux)
     bb1pz = 1.d0 + z
     bbpenalty = .false.
 
-    if (band .eq. 'Lb') then
+    if (band .eq. 'Lb' .or. band .eq. 'Ls') then
         flux = sigma_b*bbtemp**4
         return
     else

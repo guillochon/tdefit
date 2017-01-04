@@ -5,7 +5,7 @@ function get_band_type(band) result(bt)
     select case(band)
         case('X1', 'X2', 'Xs', 'Xm')
             bt = 'X'
-        case('Lb')
+        case('Lb', 'Ls')
             bt = 'L'
         case('Hl', 'HL', '51')
             bt = 'l'

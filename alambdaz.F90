@@ -21,7 +21,7 @@ function alambdaz(nu, z, nh, nhsrc) result(avfrac)
     real, intent(in) :: nu, z, nh, nhsrc
     real :: avfrac, avsrcfrac, dummy
 
-    if (bbband .eq. 'Lb') then
+    if (bbband .eq. 'Lb' .or. bbband .eq. 'Ls') then
         avfrac = 1.d0
     elseif (no_source_extinction .or. nhsrc .eq. 0.d0) then
         call alambda(nu, nh, local_rv, avfrac)

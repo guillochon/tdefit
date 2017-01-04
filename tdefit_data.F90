@@ -118,7 +118,7 @@ module tdefit_data
     integer :: initial_walker_dist
 
     ! Extra bands to output
-    character*2, dimension(2), parameter :: extra_bands = ['Lb', '51']
+    character*2, dimension(2), parameter :: extra_bands = ['Ls', '51']
     integer, parameter                   :: nextra_bands = size(extra_bands)
 
     ! Adjustable physical parameters.
